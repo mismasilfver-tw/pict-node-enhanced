@@ -30,7 +30,11 @@
     "prettier": "prettier --check .",
     "pict": "node ./scripts/pict-install.js --verbose",
     "prepare": "husky install",
-    "postinstall": "npm run pict"
+    "postinstall": "npm run pict",
+    "server": "node server/server.js",
+    "client": "cd web-interface && npm start",
+    "dev": "npx concurrently \"npm run server\" \"npm run client\"",
+    "start": "NODE_ENV=production node server/server.js"
   },
   "lint-staged": {
     "*.{ts,js}": [
@@ -44,17 +48,21 @@
   },
   "files": [
     "lib",
-    "scripts"
+    "scripts",
+    "server"
   ],
   "devDependencies": {
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
     "@types/jest": "^29.4.0",
     "@types/node": "^18.14.0",
     "@types/temp": "^0.9.1",
     "@types/tmp": "^0.2.3",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "babel-jest": "^29.5.0",
+    "concurrently": "^8.0.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.34.0",
     "eslint-config-prettier": "^8.6.0",
@@ -77,6 +85,9 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
     "temp": "^0.9.4",
     "tsguarder": "^1.0.1",
     "type-fest": "^3.6.1"

@@ -21,7 +21,6 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "importsNotUsedAsValues": "error",
     "allowJs": true,
     "checkJs": true,
     "allowSyntheticDefaultImports": true,

@@ -10,14 +10,6 @@ The library boasts excellent **TypeScript** support! 🪄
 
 > Before using this library, it's helpful to read Microsoft's official [PICT documentation](https://github.com/Microsoft/pict/blob/main/doc/pict.md) to learn about the tool and how it works.
 
-## Features
-
-- **Core Library** - TypeScript wrapper for PICT CLI tool
-- **Web Interface** - React/TypeScript frontend for interactive test case generation
-- **Express Server** - Backend API serving the web interface
-- **Test Infrastructure** - Jest, ESLint, Prettier, Husky for quality control
-- **Build Pipeline** - Rollup for library bundling
-
 ## Installation
 
 ```sh
@@ -138,7 +130,15 @@ PICT-Node now includes a web interface for interactive test case generation. Thi
 
 ### Using the Web Interface
 
-1. Start the web interface:
+1. Clone the repository and set up the project:
+
+```sh
+git clone https://github.com/yourusername/pict-node.git
+cd pict-node
+./setup.sh
+```
+
+2. Start the web interface:
 
 ```sh
 # Start both the server and web interface in development mode
@@ -148,11 +148,17 @@ npm run dev
 npm start
 ```
 
-2. Open your browser and navigate to `http://localhost:3001`
+3. Open your browser and navigate to `http://localhost:3001`
 
-3. Use the interface to create your test model and generate test cases
+4. Use the interface to create your test model and generate test cases
 
-For more details, see the [Web Interface README](./web-interface/README.md).
+### Web Interface Features
+
+- **Interactive Model Editor**: Add parameters and values with a user-friendly interface
+- **Real-time Test Case Generation**: Generate test cases with a single click
+- **Example Models**: Load pre-defined examples to get started quickly
+- **Export Options**: Export test cases as JSON or CSV
+- **Responsive Design**: Works on desktop and mobile devices
 
 ## Create Test Cases
 
@@ -208,67 +214,51 @@ const cases = await pict(
 );
 ```
 
-## Web Interface
+## TypeScript 🪄
 
-PICT-Node now includes a web interface for interactive test case generation. This provides a user-friendly way to:
+The library provides excellent support for TypeScript.
 
-- Define test models through a visual editor
-- Generate test cases with a single click
-- View and export test cases in various formats
-- Load example models to get started quickly
+Here is an example of using this tool with TypeScript:
 
-### Using the Web Interface
+```ts
+import { pict, alias, weight } from "pict-node";
 
-1. Clone the repository and set up the project:
+const model = [
+  {
+    key: "amount",
+    //                           ↓↓↓↓↓↓↓↓
+    values: [1, alias([2, "two"] as const), 3],
+  },
+  {
+    key: "fruit",
+    //                       ↓↓↓↓↓↓↓↓
+    values: [weight("Banana" as const, 10), "Orange", "Apple"],
+  },
+  // ↓↓↓↓↓
+] as const;
 
-```sh
-git clone https://github.com/yourusername/pict-node.git
-cd pict-node
-./setup.sh
+const cases = await pict({ model });
 ```
 
-2. Start the web interface:
+The type of `cases` will be:
 
-```sh
-# Start both the server and web interface in development mode
-npm run dev
-
-# Or start only the server in production mode
-npm start
+```ts
+Array<{
+  amount: 1 | 2 | "two" | 3;
+  fruit: "Banana" | "Orange" | "Apple";
+}>;
 ```
 
-3. Access the web interface:
+> ⚠️ Note that we use `as const` to get a literal types!**
 
-   - React interface: `http://localhost:3000` (when running with `npm run dev`)
-   - Simplified HTML interface: `http://localhost:3001` (when running with `npm run server`)
+Without `as const` the type of `cases` will be:
 
-4. Use the interface to create your test model and generate test cases
-
-### Web Interface Options
-
-#### React Interface (Default)
-
-The React interface is the primary web interface, offering a modern and interactive user experience with full TypeScript support.
-
-- **Access**: Available at `http://localhost:3000` when running with `npm run dev`
-- **Features**: Full-featured interface with React components, state management, and responsive design
-- **Requirements**: Requires both the Express server and React development server to be running
-
-#### Simplified HTML Interface
-
-A lightweight alternative that works directly with the Express server without requiring the React development server.
-
-- **Access**: Available at `http://localhost:3001` when running with `npm run server`
-- **Features**: Basic functionality with vanilla JavaScript, no build step required
-- **Requirements**: Only requires the Express server to be running
-
-### Web Interface Features
-
-- **Interactive Model Editor**: Add parameters and values with a user-friendly interface
-- **Real-time Test Case Generation**: Generate test cases with a single click
-- **Example Models**: Load pre-defined examples to get started quickly
-- **Export Options**: Export test cases as JSON or CSV
-- **Responsive Design**: Works on desktop and mobile devices
+```ts
+Array<{
+  amount: number | string;
+  fruit: string;
+}>;
+```
 
 ## API Reference
 
@@ -313,7 +303,9 @@ const cases = await strings({
       values: ["10", "100", "500", "1000"],
     },
   ],
-  constraints: ['IF [type] = "Primary" THEN [size] <= 500;'],
+  constraints: [
+    'IF [type] = "Primary" THEN [size] <= 500;',
+  ],
 });
 ```
 
@@ -326,7 +318,6 @@ The web interface provides a REST API for generating test cases:
 Generates test cases based on the provided model.
 
 Request body:
-
 ```json
 {
   "model": [
@@ -346,7 +337,6 @@ Request body:
 ```
 
 Response:
-
 ```json
 {
   "success": true,
@@ -373,7 +363,6 @@ Response:
 Returns example models for demonstration.
 
 Response:
-
 ```json
 {
   "examples": [
@@ -412,3 +401,7 @@ npm run dev
 # Start the production server
 npm start
 ```
+
+## License
+
+MIT
