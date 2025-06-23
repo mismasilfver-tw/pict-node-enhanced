@@ -8,6 +8,8 @@ import {
   Button,
   Spinner,
   Alert,
+  Modal,
+  Form,
 } from "react-bootstrap";
 import { toast } from "react-toastify";
 import ReactJson from "react-json-view";
@@ -37,6 +39,12 @@ interface Options {
   order?: number;
 }
 
+interface SavedScenario {
+  name: string;
+  model: Parameter[];
+  constraints: string[];
+}
+
 const App = () => {
   const [model, setModel] = useState([
     { key: "parameter1", values: ["value1", "value2"] },
@@ -47,11 +55,29 @@ const App = () => {
   const [examples, setExamples] = useState([]);
   const [options, setOptions] = useState({ order: 2 });
   const [constraints, setConstraints] = useState([]);
+  const [showClearModal, setShowClearModal] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [scenarioName, setScenarioName] = useState("");
+  const [savedScenarios, setSavedScenarios] = useState([] as SavedScenario[]);
 
-  // Fetch examples when component mounts
+  // Fetch examples and load saved scenarios when component mounts
   useEffect(() => {
     fetchExamples();
+    loadSavedScenarios();
   }, []);
+  
+  // Load saved scenarios from localStorage
+  const loadSavedScenarios = () => {
+    const savedData = localStorage.getItem('pictNodeSavedScenarios');
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData) as SavedScenario[];
+        setSavedScenarios(parsed);
+      } catch (err) {
+        console.error('Failed to parse saved scenarios:', err);
+      }
+    }
+  };
 
   const fetchExamples = async () => {
     try {
@@ -80,6 +106,62 @@ const App = () => {
     setConstraints([]);
     toast.info(`Loaded example: ${example.name}`);
   };
+
+  const clearAllValues = () => {
+    // Reset model to initial state
+    setModel([{ key: "parameter1", values: ["value1", "value2"] }]);
+    // Clear all constraints
+    setConstraints([]);
+    // Clear test cases
+    setTestCases([]);
+    // Hide the modal
+    setShowClearModal(false);
+    // Show success message
+    toast.info("All values have been cleared");
+  };
+
+  const handleSaveScenario = () => {
+    if (!scenarioName.trim()) {
+      toast.error("Please enter a name for your scenario");
+      return;
+    }
+
+    // Create new scenario object
+    const newScenario = {
+      name: scenarioName,
+      model: [...model],
+      constraints: [...constraints]
+    };
+
+    // Check if name already exists
+    const existingIndex = savedScenarios.findIndex(s => s.name === scenarioName);
+    let updatedScenarios;
+
+    if (existingIndex >= 0) {
+      // Update existing scenario
+      updatedScenarios = [...savedScenarios];
+      updatedScenarios[existingIndex] = newScenario;
+      toast.info(`Updated scenario: ${scenarioName}`);
+    } else {
+      // Add new scenario
+      updatedScenarios = [...savedScenarios, newScenario];
+      toast.success(`Saved scenario: ${scenarioName}`);
+    }
+
+    // Save to state and localStorage
+    setSavedScenarios(updatedScenarios);
+    localStorage.setItem('pictNodeSavedScenarios', JSON.stringify(updatedScenarios));
+    
+    // Reset and close modal
+    setScenarioName('');
+    setShowSaveModal(false);
+  };
+
+  const handleLoadSavedScenario = (scenario: SavedScenario) => {
+    setModel(scenario.model);
+    setConstraints(scenario.constraints);
+    toast.info(`Loaded scenario: ${scenario.name}`);
+  };  
 
   const generateTestCases = async () => {
     setLoading(true);
@@ -171,12 +253,34 @@ const App = () => {
     <Container className="app-container">
       <Header />
 
-      <Row>
-        <Col>
+      <Row className="mb-3">
+        <Col md={6}>
           <ExamplesDropdown
             examples={examples}
             onSelect={handleExampleSelect}
           />
+        </Col>
+        <Col md={6}>
+          {savedScenarios.length > 0 && (
+            <div className="d-flex align-items-center">
+              <span className="me-2">Load saved scenario:</span>
+              <select 
+                className="form-select" 
+                onChange={(e) => {
+                  const selected = savedScenarios.find(s => s.name === e.target.value);
+                  if (selected) handleLoadSavedScenario(selected);
+                  // Reset select after loading
+                  e.target.value = '';
+                }}
+                defaultValue=""
+              >
+                <option value="" disabled>Select a saved scenario</option>
+                {savedScenarios.map((scenario, index) => (
+                  <option key={index} value={scenario.name}>{scenario.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
         </Col>
       </Row>
 
@@ -197,28 +301,43 @@ const App = () => {
                 constraints={constraints}
                 onChange={setConstraints}
               />
-              <Button
-                variant="primary"
-                onClick={generateTestCases}
-                disabled={loading}
-                className="mt-3"
-              >
-                {loading ? (
-                  <>
-                    <Spinner
-                      as="span"
-                      animation="border"
-                      size="sm"
-                      role="status"
-                      aria-hidden="true"
-                      className="me-2"
-                    />
-                    Generating...
-                  </>
-                ) : (
-                  "Generate Test Cases"
-                )}
-              </Button>
+              <div className="d-flex mt-3">
+                <Button
+                  variant="primary"
+                  onClick={generateTestCases}
+                  disabled={loading}
+                  className="me-2"
+                >
+                  {loading ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                        className="me-2"
+                      />
+                      Generating...
+                    </>
+                  ) : (
+                    "Generate Test Cases"
+                  )}
+                </Button>
+                <Button
+                  variant="outline-success"
+                  onClick={() => setShowSaveModal(true)}
+                  className="me-2"
+                >
+                  Save Values
+                </Button>
+                <Button
+                  variant="outline-danger"
+                  onClick={() => setShowClearModal(true)}
+                >
+                  Clear All Values
+                </Button>
+              </div>
             </Card.Body>
           </Card>
         </Col>
@@ -252,6 +371,56 @@ const App = () => {
       </Row>
 
       <Footer />
+
+      {/* Confirmation Modal for Clear All Values */}
+      <Modal show={showClearModal} onHide={() => setShowClearModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Clear All Values</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to clear all parameters and constraints? This action cannot be undone.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowClearModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={clearAllValues}>
+            Clear All Values
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Save Scenario Modal */}
+      <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Save Scenario</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="mb-3">
+            <label className="form-label">Scenario Name</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter a name for this scenario"
+              value={scenarioName}
+              onChange={(e) => setScenarioName(e.target.value)}
+              pattern="[A-Za-z0-9 ]+"
+              title="Name can contain letters, numbers, and spaces"
+            />
+            <div className="form-text text-muted">
+              Name can contain letters, numbers, and spaces.
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="success" onClick={handleSaveScenario}>
+            Save Scenario
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

@@ -181,7 +181,7 @@ const ModelEditor = ({
         </Card>
       ))}
 
-      <Button variant="outline-primary" onClick={addParameter}>
+      <Button variant="outline-primary" onClick={addParameter} className="mb-4">
         Add Parameter
       </Button>
     </div>
