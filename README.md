@@ -1,8 +1,20 @@
-# [pict-node](https://pict-node.js.org)
+# [pict-node-enhanced](https://pict-node.js.org)
 
 ![CLI watch mode example](./docs/logo.svg)
 
 ### [Documentation](https://pict-node.js.org)
+
+## Attribution
+
+This project is based on [pict-node](https://github.com/microsoft/pict-node) and extends it with additional features including:
+
+- Enhanced web interface with improved UI/UX
+- Constraint handling improvements and validation
+- Saved scenarios functionality with localStorage persistence
+- Clear all values functionality
+- Future plans for statistics visualization
+
+The original project is licensed under the MIT License, and this enhanced version maintains that license.
 
 This library is a wrapper around Microsoft's [PICT](https://github.com/microsoft/pict) (Pairwise Independent Combinatorial Testing) tool, designed to work with Node.js for generating combinations of inputs for software testing. PICT is a powerful tool that helps reduce the number of tests needed while still ensuring comprehensive coverage by generating optimized combinations of inputs.
 

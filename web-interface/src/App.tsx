@@ -65,16 +65,16 @@ const App = () => {
     fetchExamples();
     loadSavedScenarios();
   }, []);
-  
+
   // Load saved scenarios from localStorage
   const loadSavedScenarios = () => {
-    const savedData = localStorage.getItem('pictNodeSavedScenarios');
+    const savedData = localStorage.getItem("pictNodeSavedScenarios");
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData) as SavedScenario[];
         setSavedScenarios(parsed);
       } catch (err) {
-        console.error('Failed to parse saved scenarios:', err);
+        console.error("Failed to parse saved scenarios:", err);
       }
     }
   };
@@ -130,11 +130,13 @@ const App = () => {
     const newScenario = {
       name: scenarioName,
       model: [...model],
-      constraints: [...constraints]
+      constraints: [...constraints],
     };
 
     // Check if name already exists
-    const existingIndex = savedScenarios.findIndex(s => s.name === scenarioName);
+    const existingIndex = savedScenarios.findIndex(
+      (s) => s.name === scenarioName
+    );
     let updatedScenarios;
 
     if (existingIndex >= 0) {
@@ -150,10 +152,13 @@ const App = () => {
 
     // Save to state and localStorage
     setSavedScenarios(updatedScenarios);
-    localStorage.setItem('pictNodeSavedScenarios', JSON.stringify(updatedScenarios));
-    
+    localStorage.setItem(
+      "pictNodeSavedScenarios",
+      JSON.stringify(updatedScenarios)
+    );
+
     // Reset and close modal
-    setScenarioName('');
+    setScenarioName("");
     setShowSaveModal(false);
   };
 
@@ -161,7 +166,7 @@ const App = () => {
     setModel(scenario.model);
     setConstraints(scenario.constraints);
     toast.info(`Loaded scenario: ${scenario.name}`);
-  };  
+  };
 
   const generateTestCases = async () => {
     setLoading(true);
@@ -264,19 +269,25 @@ const App = () => {
           {savedScenarios.length > 0 && (
             <div className="d-flex align-items-center">
               <span className="me-2">Load saved scenario:</span>
-              <select 
-                className="form-select" 
+              <select
+                className="form-select"
                 onChange={(e) => {
-                  const selected = savedScenarios.find(s => s.name === e.target.value);
+                  const selected = savedScenarios.find(
+                    (s) => s.name === e.target.value
+                  );
                   if (selected) handleLoadSavedScenario(selected);
                   // Reset select after loading
-                  e.target.value = '';
+                  e.target.value = "";
                 }}
                 defaultValue=""
               >
-                <option value="" disabled>Select a saved scenario</option>
+                <option value="" disabled>
+                  Select a saved scenario
+                </option>
                 {savedScenarios.map((scenario, index) => (
-                  <option key={index} value={scenario.name}>{scenario.name}</option>
+                  <option key={index} value={scenario.name}>
+                    {scenario.name}
+                  </option>
                 ))}
               </select>
             </div>
@@ -378,7 +389,8 @@ const App = () => {
           <Modal.Title>Confirm Clear All Values</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to clear all parameters and constraints? This action cannot be undone.
+          Are you sure you want to clear all parameters and constraints? This
+          action cannot be undone.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowClearModal(false)}>
