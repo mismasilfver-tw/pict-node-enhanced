@@ -20,19 +20,74 @@ const generateTestCases = async (req, res) => {
     // If constraints are provided, use the strings API which supports constraints
     let cases;
     if (constraints && constraints.length > 0) {
-      // Convert all values to strings for the strings API
-      const stringModel = model.map((param) => ({
-        key: param.key,
-        values: param.values.map((v) => String(v)),
-      }));
+      try {
+        // First, convert the model to use only string values as required by the strings API
+        const stringModel = model.map((param) => ({
+          key: param.key,
+          // Convert all values to strings, ensuring proper type handling
+          values: param.values.map((v) => {
+            if (v === null || v === undefined) return "";
+            return String(v);
+          }),
+        }));
 
-      cases = await strings(
-        {
-          model: stringModel,
-          constraints,
-        },
-        options || {}
-      );
+        // Get all parameter names for validation
+        const parameterNames = stringModel.map((param) => param.key);
+
+        // Create a mapping of parameter values for validation
+        const paramValueMap = {};
+        stringModel.forEach((param) => {
+          paramValueMap[param.key] = param.values;
+        });
+
+        // Process and validate each constraint
+        const formattedConstraints = [];
+
+        for (const constraint of constraints) {
+          // Clean up the constraint
+          let processedConstraint = constraint.trim();
+
+          // Remove any existing semicolons at the end
+          processedConstraint = processedConstraint.replace(/;\s*$/, "");
+
+          // Validate that the constraint references valid parameters
+          let isValid = false;
+          for (const paramName of parameterNames) {
+            if (processedConstraint.includes(`[${paramName}]`)) {
+              isValid = true;
+              break;
+            }
+          }
+
+          if (!isValid) {
+            throw new Error(
+              `Constraint references unknown parameter: ${processedConstraint}`
+            );
+          }
+
+          // Ensure proper spacing around operators for better parsing
+          processedConstraint = processedConstraint
+            .replace(/([<>])=/g, "$1= ") // Handle >=, <=
+            .replace(/([^<>])=([^=])/g, "$1 = $2") // Handle =
+            .replace(/<>/g, " <> ") // Handle <>
+            .replace(/\s{2,}/g, " "); // Normalize spaces
+
+          // Add semicolon at the end
+          formattedConstraints.push(`${processedConstraint};`);
+        }
+
+        // Use the strings API with properly formatted constraints
+        cases = await strings(
+          {
+            model: stringModel,
+            constraints: formattedConstraints,
+          },
+          options || {}
+        );
+      } catch (error) {
+        console.error("Error processing constraints:", error);
+        throw error;
+      }
     } else {
       // Use the standard pict API if no constraints
       cases = await pict({ model }, options || {});

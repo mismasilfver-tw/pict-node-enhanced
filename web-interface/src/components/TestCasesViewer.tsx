@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Table, Alert, Pagination } from 'react-bootstrap';
+import React, { useState } from "react";
+import { Table, Alert, Pagination } from "react-bootstrap";
 
 interface TestCase {
   [key: string]: any;
@@ -12,20 +12,19 @@ interface TestCasesViewerProps {
 const TestCasesViewer = ({ testCases }: TestCasesViewerProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [casesPerPage] = useState(10);
-  
+
   if (!testCases || testCases.length === 0) {
     return (
       <Alert variant="info">
-        No test cases generated yet. Configure your model and click "Generate Test Cases".
+        No test cases generated yet. Configure your model and click "Generate
+        Test Cases".
       </Alert>
     );
   }
 
   // Get column headers from all test cases
   const headers = Array.from(
-    new Set(
-      testCases.flatMap(testCase => Object.keys(testCase))
-    )
+    new Set(testCases.flatMap((testCase) => Object.keys(testCase)))
   );
 
   // Pagination logic
@@ -39,8 +38,8 @@ const TestCasesViewer = ({ testCases }: TestCasesViewerProps) => {
   // Format cell value for display
   const formatCellValue = (value: any): string => {
     if (value === undefined || value === null) {
-      return '';
-    } else if (typeof value === 'object') {
+      return "";
+    } else if (typeof value === "object") {
       return JSON.stringify(value);
     } else {
       return String(value);
@@ -74,20 +73,21 @@ const TestCasesViewer = ({ testCases }: TestCasesViewerProps) => {
 
       {totalPages > 1 && (
         <Pagination className="justify-content-center">
-          <Pagination.First 
-            onClick={() => paginate(1)} 
+          <Pagination.First
+            onClick={() => paginate(1)}
             disabled={currentPage === 1}
           />
-          <Pagination.Prev 
-            onClick={() => paginate(currentPage - 1)} 
+          <Pagination.Prev
+            onClick={() => paginate(currentPage - 1)}
             disabled={currentPage === 1}
           />
-          
+
           {Array.from({ length: totalPages }, (_, i) => i + 1)
-            .filter(page => 
-              page === 1 || 
-              page === totalPages || 
-              Math.abs(page - currentPage) <= 2
+            .filter(
+              (page) =>
+                page === 1 ||
+                page === totalPages ||
+                Math.abs(page - currentPage) <= 2
             )
             .map((page, index, array) => {
               // Add ellipsis if there are gaps in the page numbers
@@ -114,20 +114,22 @@ const TestCasesViewer = ({ testCases }: TestCasesViewerProps) => {
                 </Pagination.Item>
               );
             })}
-          
-          <Pagination.Next 
-            onClick={() => paginate(currentPage + 1)} 
+
+          <Pagination.Next
+            onClick={() => paginate(currentPage + 1)}
             disabled={currentPage === totalPages}
           />
-          <Pagination.Last 
-            onClick={() => paginate(totalPages)} 
+          <Pagination.Last
+            onClick={() => paginate(totalPages)}
             disabled={currentPage === totalPages}
           />
         </Pagination>
       )}
-      
+
       <div className="text-muted text-center mt-2">
-        Showing {indexOfFirstCase + 1}-{Math.min(indexOfLastCase, testCases.length)} of {testCases.length} test cases
+        Showing {indexOfFirstCase + 1}-
+        {Math.min(indexOfLastCase, testCases.length)} of {testCases.length} test
+        cases
       </div>
     </div>
   );

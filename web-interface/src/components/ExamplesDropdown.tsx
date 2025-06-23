@@ -1,5 +1,5 @@
-import React from 'react';
-import { Dropdown } from 'react-bootstrap';
+import React from "react";
+import { Dropdown } from "react-bootstrap";
 
 interface Parameter {
   key: string;
@@ -29,10 +29,7 @@ const ExamplesDropdown = ({ examples, onSelect }: ExamplesDropdownProps) => {
         </Dropdown.Toggle>
         <Dropdown.Menu>
           {examples.map((example, index) => (
-            <Dropdown.Item 
-              key={index} 
-              onClick={() => onSelect(example)}
-            >
+            <Dropdown.Item key={index} onClick={() => onSelect(example)}>
               {example.name}
             </Dropdown.Item>
           ))}
