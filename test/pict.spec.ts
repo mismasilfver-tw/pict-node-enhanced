@@ -3,6 +3,7 @@ import {
   NOT_ARRAY_TYPES,
   NOT_PROPERTY_KEY_TYPES,
   NOT_RECORD_TYPES,
+  expectAsyncToThrowError,
 } from "./utils";
 import { pict } from "../src/api/pict";
 import type { PictTypedModel } from "../src/api/pict/types";
@@ -17,9 +18,9 @@ describe("pict()", () => {
       for (const notRecord of NOT_RECORD_TYPES) {
         // @ts-expect-error
         const act = async () => await pict(notRecord);
-        const result = expect(act);
-        await result.rejects.toThrowError(
-          "the first argument: must be a record"
+        await expectAsyncToThrowError(
+          act,
+          "the first argument: must be a record",
         );
       }
     });
@@ -39,11 +40,9 @@ describe("pict()", () => {
       for (const notRecord of EXCLUDE_TYPES(["undefined", "record"])) {
         // @ts-expect-error
         const act = async () => await pict({ model }, notRecord);
-
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          "the second argument: must be a record"
+        await expectAsyncToThrowError(
+          act,
+          "the second argument: must be a record",
         );
       }
     });
@@ -68,12 +67,13 @@ describe("pict()", () => {
             },
             {
               order: invalidOrder,
-            }
+            },
           );
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError('"order": must be a positive number');
+        await expectAsyncToThrowError(
+          act,
+          '"order": must be a positive number',
+        );
       }
     });
 
@@ -100,13 +100,12 @@ describe("pict()", () => {
           },
           {
             order: 4,
-          }
+          },
         );
 
-      const result = expect(act);
-
-      await result.rejects.toThrowError(
-        '"order" cannot be larger than number of parameters'
+      await expectAsyncToThrowError(
+        act,
+        '"order" cannot be larger than number of parameters',
       );
     });
 
@@ -135,13 +134,12 @@ describe("pict()", () => {
             {
               // @ts-expect-error
               random: invalidType,
-            }
+            },
           );
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          "options.random: must be a number or boolean"
+        await expectAsyncToThrowError(
+          act,
+          "options.random: must be a number or boolean",
         );
       }
     });
@@ -155,8 +153,7 @@ describe("pict()", () => {
             // @ts-expect-error
             model: notArray,
           });
-        const result = expect(act);
-        await result.rejects.toThrowError('"model": must be an array');
+        await expectAsyncToThrowError(act, '"model": must be an array');
       }
     });
 
@@ -166,8 +163,10 @@ describe("pict()", () => {
           model: [],
         });
 
-      const result = expect(act);
-      await result.rejects.toThrowError('"model" must contain at least 1 item');
+      await expectAsyncToThrowError(
+        act,
+        '"model" must contain at least 1 item',
+      );
     });
 
     test("Should throw an error if model contain an invalid parameter", async () => {
@@ -258,10 +257,9 @@ describe("pict()", () => {
             model: invalidModel.model,
           });
 
-        const result = await expect(act);
-
-        await result.rejects.toThrowError(
-          `model[${invalidModel.index}]: must be a type { key: PropertyKey, values: unknown[] }`
+        await expectAsyncToThrowError(
+          act,
+          `model[${invalidModel.index}]: must be a type { key: PropertyKey, values: unknown[] }`,
         );
       }
     });
@@ -283,8 +281,7 @@ describe("pict()", () => {
             // @ts-expect-error
             sub: notRecord,
           });
-        const result = expect(act);
-        await result.rejects.toThrowError('"sub": must be an array');
+        await expectAsyncToThrowError(act, '"sub": must be an array');
       }
     });
 
@@ -312,10 +309,9 @@ describe("pict()", () => {
           ],
         });
 
-      const result = expect(act);
-
-      await result.rejects.toThrowError(
-        `Parameter "_NOT_EXISTENT_" has been not found`
+      await expectAsyncToThrowError(
+        act,
+        `Parameter "_NOT_EXISTENT_" has been not found`,
       );
     });
 
@@ -385,10 +381,9 @@ describe("pict()", () => {
             sub: item.subModels,
           });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          `sub[${item.index}]: must be an type { keys: Array<PropertyKey>; order?: number }`
+        await expectAsyncToThrowError(
+          act,
+          `sub[${item.index}]: must be an type { keys: Array<PropertyKey>; order?: number }`,
         );
       }
     });
@@ -415,10 +410,9 @@ describe("pict()", () => {
             seed: invalidType,
           });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          `"seed": must be an array Array<{ [key: PropertyKey]: unknown }>`
+        await expectAsyncToThrowError(
+          act,
+          `"seed": must be an array Array<{ [key: PropertyKey]: unknown }>`,
         );
       }
     });
@@ -446,10 +440,9 @@ describe("pict()", () => {
           ],
         });
 
-      const result = expect(act);
-
-      await result.rejects.toThrowError(
-        `Parameter "_NOT_EXISTENT_" has been not found`
+      await expectAsyncToThrowError(
+        act,
+        `Parameter "_NOT_EXISTENT_" has been not found`,
       );
     });
 
@@ -476,10 +469,9 @@ describe("pict()", () => {
           ],
         });
 
-      const result = expect(act);
-
-      await result.rejects.toThrowError(
-        `Value "_NOT_EXISTENT_" has been not found`
+      await expectAsyncToThrowError(
+        act,
+        `Value "_NOT_EXISTENT_" has been not found`,
       );
     });
   });
@@ -656,7 +648,7 @@ describe("pict()", () => {
         },
         {
           order: model.length,
-        }
+        },
       );
 
       expect(result).toHaveLength(27);

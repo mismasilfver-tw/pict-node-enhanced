@@ -33,7 +33,7 @@ export type PictModelId = string;
 
 export interface PictModel<
   Key extends PropertyKey = PropertyKey,
-  Values extends unknown = unknown
+  Values extends unknown = unknown,
 > {
   key: Key;
   values: ReadonlyArray<Values>;
@@ -46,14 +46,14 @@ type ExtractParameterValue<ParameterValues> =
       >
       ? ValueFromAliasOperator[number]
       : ParameterValuesItem extends NegativeOperatorObject<
-          infer ValueFromNegativeOperator
-        >
-      ? ValueFromNegativeOperator
-      : ParameterValuesItem extends WeightOperatorObject<
-          infer ValueFromNegativeOperator
-        >
-      ? ValueFromNegativeOperator
-      : ParameterValuesItem
+            infer ValueFromNegativeOperator
+          >
+        ? ValueFromNegativeOperator
+        : ParameterValuesItem extends WeightOperatorObject<
+              infer ValueFromNegativeOperator
+            >
+          ? ValueFromNegativeOperator
+          : ParameterValuesItem
     : never;
 
 type PictModelToRecord<ModelArg> = ModelArg extends infer ModelArgInfer
@@ -88,12 +88,12 @@ export const isInputSubModel: TypeGuard<
     }
 
     return true;
-  }
+  },
 );
 
 export type InputSeed<
   M extends ReadonlyArray<PictModel>,
-  T = Partial<InputPictModelToRecord<M>>
+  T = Partial<InputPictModelToRecord<M>>,
 > = ReadonlyArray<
   keyof T extends infer KeysInfer
     ? KeysInfer extends keyof T
@@ -106,7 +106,7 @@ export const isInputSeed: TypeGuard<InputSeed<ReadonlyArray<PictModel>>> =
   createTypeGuard(
     "must be an array Array<{ [key: PropertyKey]: unknown }>",
     (value: unknown): value is InputSeed<ReadonlyArray<PictModel>> =>
-      isArray(value)
+      isArray(value),
   );
 
 export type InputPictModelToRecord<ModelArg> = UnionToIntersection<
@@ -125,7 +125,7 @@ export type RandomOption = number | string | boolean;
 
 export const isRandomOption: TypeGuard<RandomOption> = createTypeGuard(
   "must be a number or boolean",
-  (value: unknown): value is RandomOption => isNumber(value) || value === true
+  (value: unknown): value is RandomOption => isNumber(value) || value === true,
 );
 
 export type ModelSeparator = string;
@@ -134,7 +134,7 @@ export const isModelSeparator: TypeGuard<ModelSeparator> = createTypeGuard(
   "must be a string containing a single character",
   (value: unknown): value is ModelSeparator => {
     return isString(value) && value.length === 1;
-  }
+  },
 );
 
 export interface PictNodeStatistics {

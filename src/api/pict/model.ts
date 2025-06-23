@@ -12,7 +12,7 @@ import { isWeightOperator } from "../../common/operators/weight";
  */
 export function createModel<M extends ReadonlyArray<PictTypedModel>>(
   models: M,
-  subModels?: ReadonlyArray<InputSubModel<M>>
+  subModels?: ReadonlyArray<InputSubModel<M>>,
 ) {
   const modelBuilder = new ModelBuilder();
   const valuesIdMap = new ValuesIdMap();
@@ -78,7 +78,7 @@ export function createModel<M extends ReadonlyArray<PictTypedModel>>(
       isInputSubModel.assert(subModelsItem, `sub[${subModelIndex}]`);
 
       const indexArray = subModelsItem.keys.map((parameter) =>
-        valuesIdMap.getParameterIdByParameterName(parameter)
+        valuesIdMap.getParameterIdByParameterName(parameter),
       );
       modelBuilder.addSubModel(indexArray, subModelsItem.order);
     }

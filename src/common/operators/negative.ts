@@ -15,7 +15,7 @@ export function negative<T extends unknown>(value: T) {
 }
 
 export function isNegativeOperator(
-  value: unknown
+  value: unknown,
 ): value is NegativeOperatorObject<unknown> {
   return isRecord(value) && NEGATIVE_OPERATOR in value;
 }

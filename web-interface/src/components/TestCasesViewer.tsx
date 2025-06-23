@@ -24,7 +24,7 @@ const TestCasesViewer = ({ testCases }: TestCasesViewerProps) => {
 
   // Get column headers from all test cases
   const headers = Array.from(
-    new Set(testCases.flatMap((testCase) => Object.keys(testCase)))
+    new Set(testCases.flatMap((testCase) => Object.keys(testCase))),
   );
 
   // Pagination logic
@@ -87,7 +87,7 @@ const TestCasesViewer = ({ testCases }: TestCasesViewerProps) => {
               (page) =>
                 page === 1 ||
                 page === totalPages ||
-                Math.abs(page - currentPage) <= 2
+                Math.abs(page - currentPage) <= 2,
             )
             .map((page, index, array) => {
               // Add ellipsis if there are gaps in the page numbers

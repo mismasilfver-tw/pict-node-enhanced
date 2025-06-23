@@ -45,7 +45,7 @@ const ModelEditor = ({
   const addValue = (paramIndex: number) => {
     const newModel = [...model];
     newModel[paramIndex].values.push(
-      `value${newModel[paramIndex].values.length + 1}`
+      `value${newModel[paramIndex].values.length + 1}`,
     );
     onChange(newModel);
   };
@@ -53,7 +53,7 @@ const ModelEditor = ({
   const updateValue = (
     paramIndex: number,
     valueIndex: number,
-    value: string
+    value: string,
   ) => {
     const newModel = [...model];
 

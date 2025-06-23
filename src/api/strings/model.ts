@@ -54,7 +54,7 @@ export function createStringModel<M extends ReadonlyArray<PictStringModel>>({
         aliasValues.forEach((aliasValueItem) => {
           isString.assert(
             aliasValueItem,
-            `model[${paramIndex}].values[${valueIndex}]`
+            `model[${paramIndex}].values[${valueIndex}]`,
           );
         });
 

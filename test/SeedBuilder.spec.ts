@@ -1,5 +1,5 @@
 import { SeedBuilder } from "../src/common/SeedBuilder";
-import { NOT_STRING_TYPES } from "./utils";
+import { NOT_STRING_TYPES, expectToThrowError } from "./utils";
 import { EOL } from "os";
 
 describe("SeedBuilder", () => {
@@ -18,7 +18,7 @@ describe("SeedBuilder", () => {
     test("Should throw an error on an empty object", () => {
       const act = () => instance.add({});
 
-      expect(act).toThrowError("Values must not be an empty object");
+      expectToThrowError(act, "Values must not be an empty object");
     });
 
     test("Should throw an error if value is not a string", () => {
@@ -29,7 +29,7 @@ describe("SeedBuilder", () => {
             ["key"]: notString,
           });
 
-        expect(act).toThrowError("Value must be a string");
+        expectToThrowError(act, "Value must be a string");
       }
     });
   });
@@ -54,7 +54,7 @@ describe("SeedBuilder", () => {
 
       const result = instance.getString();
       expect(result).toBe(
-        `A\tB\tC\tX${EOL}1\t3\t7\t${EOL}4\t\t6\t${EOL}100\t\t\t50`
+        `A\tB\tC\tX${EOL}1\t3\t7\t${EOL}4\t\t6\t${EOL}100\t\t\t50`,
       );
     });
   });

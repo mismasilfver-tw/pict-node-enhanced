@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -340,7 +340,7 @@ No test cases generated yet. Configure your model and click "Generate Test Cases
 
       function addValue(paramIndex) {
         model[paramIndex].values.push(
-          `value${model[paramIndex].values.length + 1}`
+          `value${model[paramIndex].values.length + 1}`,
         );
         renderParameters();
       }
@@ -465,7 +465,7 @@ No test cases generated yet. Configure your model and click "Generate Test Cases
 
         // Get all unique keys from test cases
         const keys = Array.from(
-          new Set(testCases.flatMap((testCase) => Object.keys(testCase)))
+          new Set(testCases.flatMap((testCase) => Object.keys(testCase))),
         );
 
         // Create CSV header

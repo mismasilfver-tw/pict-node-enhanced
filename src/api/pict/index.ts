@@ -25,11 +25,11 @@ interface PictOptions {
 type Pict = {
   <M extends readonly PictTypedModel[]>(
     model: { model: M; sub?: readonly InputSubModel<M>[]; seed?: InputSeed<M> },
-    options?: PictOptions
+    options?: PictOptions,
   ): Promise<InputPictModelToRecord<M>[]>;
   stats: <M extends readonly PictTypedModel[]>(
     model: { model: M; sub?: readonly InputSubModel<M>[]; seed?: InputSeed<M> },
-    options?: PictOptions
+    options?: PictOptions,
   ) => Promise<PictNodeStatistics>;
 };
 
@@ -39,7 +39,7 @@ export function prepare<M extends ReadonlyArray<PictTypedModel>>(
     sub?: ReadonlyArray<InputSubModel<M>>;
     seed?: InputSeed<M>;
   },
-  options?: PictOptions
+  options?: PictOptions,
 ) {
   isRecord.assert(model, "the first argument");
   isArray.assert(model.model, '"model"');
@@ -92,14 +92,14 @@ export function prepare<M extends ReadonlyArray<PictTypedModel>>(
 }
 
 export const pict: Pict = async function pict<
-  M extends ReadonlyArray<PictTypedModel>
+  M extends ReadonlyArray<PictTypedModel>,
 >(
   model: {
     model: M;
     sub?: ReadonlyArray<InputSubModel<M>>;
     seed?: InputSeed<M>;
   },
-  options?: PictOptions
+  options?: PictOptions,
 ) {
   try {
     const { callPictOptions, valuesIdMap } = prepare(model, options);
@@ -119,7 +119,7 @@ pict.stats = async function stats<M extends ReadonlyArray<PictTypedModel>>(
     sub?: ReadonlyArray<InputSubModel<M>>;
     seed?: InputSeed<M>;
   },
-  options?: PictOptions
+  options?: PictOptions,
 ) {
   try {
     const start = performance.now();

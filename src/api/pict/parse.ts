@@ -3,7 +3,7 @@ import type { ValuesIdMap } from "./ValuesIdMap";
 
 export function parseResult(
   result: string,
-  valuesIdMap: ValuesIdMap
+  valuesIdMap: ValuesIdMap,
 ): Array<Record<PropertyKey, unknown>> {
   const cases: any[] = [];
 

@@ -22,19 +22,19 @@ export const isPropertyKey: TypeGuard<PropertyKey> = createTypeGuard(
       typeof value === "number" ||
       typeof value === "symbol"
     );
-  }
+  },
 );
 
 export const isPositiveNumber: TypeGuard<number> = createTypeGuard(
   "must be a positive number",
   (value): value is number => {
     return isNumber(value) && value > 0;
-  }
+  },
 );
 
 export const isBuffer: TypeGuard<Buffer> = createTypeGuard(
   "must be a Buffer",
   (value): value is Buffer => {
     return value instanceof Buffer;
-  }
+  },
 );

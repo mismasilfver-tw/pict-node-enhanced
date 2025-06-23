@@ -61,7 +61,7 @@ const generateTestCases = async (req, res) => {
 
           if (!isValid) {
             throw new Error(
-              `Constraint references unknown parameter: ${processedConstraint}`
+              `Constraint references unknown parameter: ${processedConstraint}`,
             );
           }
 
@@ -82,7 +82,7 @@ const generateTestCases = async (req, res) => {
             model: stringModel,
             constraints: formattedConstraints,
           },
-          options || {}
+          options || {},
         );
       } catch (error) {
         console.error("Error processing constraints:", error);

@@ -8,7 +8,7 @@ export interface AliasOperatorObject<T extends ReadonlyArray<unknown>> {
 }
 
 export function alias<T extends ReadonlyArray<unknown>>(
-  values: T
+  values: T,
 ): {
   [ALIAS_OPERATOR]: T;
   getValues: () => T;
@@ -24,7 +24,7 @@ export function alias<T extends ReadonlyArray<unknown>>(
 }
 
 export function isAliasOperator(
-  value: unknown
+  value: unknown,
 ): value is AliasOperatorObject<ReadonlyArray<unknown>> {
   return isRecord(value) && ALIAS_OPERATOR in value;
 }

@@ -29,12 +29,12 @@ const ConstraintsEditor = ({
 
     // Basic validation - check if the constraint contains parameter names
     const isValid = model.some((param) =>
-      formattedConstraint.includes(`[${param.key}]`)
+      formattedConstraint.includes(`[${param.key}]`),
     );
 
     if (!isValid) {
       setError(
-        "Constraint should reference at least one parameter using [parameter_name] syntax"
+        "Constraint should reference at least one parameter using [parameter_name] syntax",
       );
       return;
     }
@@ -60,7 +60,7 @@ const ConstraintsEditor = ({
             // Just log a warning for now
             console.warn(
               "Value in constraint may need quotes:",
-              formattedConstraint
+              formattedConstraint,
             );
           }
         }

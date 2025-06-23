@@ -216,7 +216,7 @@ const cases = await pict(
   },
   {
     order: 3,
-  }
+  },
 );
 ```
 
@@ -250,7 +250,6 @@ npm start
 ```
 
 3. Access the web interface:
-
    - React interface: `http://localhost:3000` (when running with `npm run dev`)
    - Simplified HTML interface: `http://localhost:3001` (when running with `npm run server`)
 
@@ -432,54 +431,45 @@ npm start
 The following are potential improvements to the constraints editor UI to make it more user-friendly:
 
 1. **Parameter Autocomplete/Dropdown**
-
    - Add autocomplete functionality that shows available parameters when typing `[`
    - Display a dropdown of available parameters that can be inserted with a click
    - Highlight parameter references in a different color for better visibility
 
 2. **Visual Constraint Builder**
-
    - Create a visual builder with dropdowns for parameters, operators, values, and logical connectors
    - Allow users to build constraints using this interface, which generates the proper syntax
 
 3. **Syntax Validation and Error Highlighting**
-
    - Add real-time syntax validation as users type
    - Highlight errors with red underlines and tooltips explaining the issue
    - Provide suggestions to fix common errors (like adding/removing quotes for numeric values)
 
 4. **Type-Aware Value Formatting**
-
    - Automatically format values based on parameter type (string, numeric, boolean)
    - For numeric parameters, automatically remove quotes
    - For string parameters, automatically add quotes if missing
 
 5. **Template Library**
-
    - Provide a library of common constraint templates (IF-THEN, AND/OR combinations, etc.)
    - Allow users to select a template and fill in the parameters and values
 
 6. **Constraint Groups and Organization**
-
    - Allow grouping related constraints
    - Add collapsible sections for different constraint groups
    - Provide a way to enable/disable constraints without removing them
 
 7. **Visual Feedback on Constraint Impact**
-
    - Show a preview of how many test cases would be affected by each constraint
    - Provide visual indicators of constraint "strength" (how much it reduces the test space)
    - Allow users to see which test cases would be eliminated by each constraint
 
 8. **Improved Constraint List**
-
    - Color-code constraints by type (IF-THEN, simple equality, etc.)
    - Add icons representing the constraint type
    - Allow inline editing of existing constraints
    - Add a search/filter function for constraints
 
 9. **Constraint Wizard for Beginners**
-
    - Add a "Constraint Wizard" that walks users through creating constraints step by step
    - Provide examples specific to the current model parameters
    - Include tooltips and help text throughout the interface
@@ -494,19 +484,16 @@ The following are potential improvements to the constraints editor UI to make it
 The following features from the core library are not yet implemented in the web interface:
 
 1. **Sub-models Support**
-
    - Implement UI for defining relationships between parameters
    - Visual representation of sub-model hierarchies
    - Validation to ensure sub-models reference valid parameters
 
 2. **Seed Values**
-
    - Add interface for providing seed values to influence test case generation
    - Preview how seed values affect the generated test cases
    - Option to randomly generate seed values
 
 3. **Advanced Operators**
-
    - UI for applying operators to parameter values:
      - **Alias**: For creating aliases for values
      - **Negative**: For negative testing scenarios
@@ -514,13 +501,11 @@ The following features from the core library are not yet implemented in the web 
    - Visual indicators for values with operators applied
 
 4. **Statistics Display**
-
    - Show detailed statistics about test case generation
    - Visualizations like coverage graphs or charts
    - Metrics on test space reduction and coverage efficiency
 
 5. **Advanced Configuration Options**
-
    - Collapsible panel for advanced options:
      - **Random**: Toggle for randomizing test case generation
      - **Separators**: Custom syntax for alias, value, and negative prefix
@@ -528,7 +513,6 @@ The following features from the core library are not yet implemented in the web 
    - Presets for common configuration combinations
 
 6. **Native API Access**
-
    - Advanced mode for direct access to PICT functionality
    - Custom command builder for power users
    - Option to view and edit the raw PICT model

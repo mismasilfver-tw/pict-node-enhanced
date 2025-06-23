@@ -71,7 +71,7 @@ export class ValuesIdMap {
     parameter: PropertyKey,
     parameterId: PictModelId,
     value: unknown,
-    valueId: PictModelId
+    valueId: PictModelId,
   ) {
     const parameterMap = this.valuesToIdMap.get(parameter);
 

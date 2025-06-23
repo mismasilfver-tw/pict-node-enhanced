@@ -40,17 +40,17 @@ export class ModelBuilder {
     }
     if (!isUndefined(options["aliasSeparator"])) {
       this.aliasSeparator = ModelBuilder.validateSeparator(
-        options["aliasSeparator"]
+        options["aliasSeparator"],
       );
     }
     if (!isUndefined(options["valueSeparator"])) {
       this.valueSeparator = ModelBuilder.validateSeparator(
-        options["valueSeparator"]
+        options["valueSeparator"],
       );
     }
     if (!isUndefined(options["negativePrefix"])) {
       this.negativePrefix = ModelBuilder.validateSeparator(
-        options["negativePrefix"]
+        options["negativePrefix"],
       );
     }
   }
@@ -72,11 +72,13 @@ export class ModelBuilder {
    */
   addAliasParameter(
     key: string,
-    values: Array<string> | ReadonlyArray<string>
+    values: Array<string> | ReadonlyArray<string>,
   ) {
     const array = this.getParameterValues(this.validateValue(key));
     array.push(
-      values.map((value) => this.validateValue(value)).join(this.aliasSeparator)
+      values
+        .map((value) => this.validateValue(value))
+        .join(this.aliasSeparator),
     );
   }
 
@@ -100,7 +102,7 @@ export class ModelBuilder {
 
     const array = this.getParameterValues(this.validateValue(key));
     array.push(
-      `${this.validateValue(value)}(${this.validateValue(String(weight))})`
+      `${this.validateValue(value)}(${this.validateValue(String(weight))})`,
     );
   }
 
@@ -109,7 +111,7 @@ export class ModelBuilder {
    */
   addSubModel(
     parameters: Array<string> | ReadonlyArray<string>,
-    order?: number
+    order?: number,
   ) {
     const format = parameters.map((parameter) => this.validateValue(parameter));
 

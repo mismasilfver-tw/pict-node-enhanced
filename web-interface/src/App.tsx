@@ -135,7 +135,7 @@ const App = () => {
 
     // Check if name already exists
     const existingIndex = savedScenarios.findIndex(
-      (s) => s.name === scenarioName
+      (s) => s.name === scenarioName,
     );
     let updatedScenarios;
 
@@ -154,7 +154,7 @@ const App = () => {
     setSavedScenarios(updatedScenarios);
     localStorage.setItem(
       "pictNodeSavedScenarios",
-      JSON.stringify(updatedScenarios)
+      JSON.stringify(updatedScenarios),
     );
 
     // Reset and close modal
@@ -183,7 +183,7 @@ const App = () => {
       if (data && data.cases) {
         setTestCases(data.cases);
         toast.success(
-          `Generated ${data.count || data.cases.length} test cases`
+          `Generated ${data.count || data.cases.length} test cases`,
         );
       }
     } catch (err: any) {
@@ -203,7 +203,7 @@ const App = () => {
 
     // Get all unique keys from test cases
     const keys = Array.from(
-      new Set(testCases.flatMap((testCase) => Object.keys(testCase)))
+      new Set(testCases.flatMap((testCase) => Object.keys(testCase))),
     );
 
     // Create CSV header
@@ -273,7 +273,7 @@ const App = () => {
                 className="form-select"
                 onChange={(e) => {
                   const selected = savedScenarios.find(
-                    (s) => s.name === e.target.value
+                    (s) => s.name === e.target.value,
                   );
                   if (selected) handleLoadSavedScenario(selected);
                   // Reset select after loading

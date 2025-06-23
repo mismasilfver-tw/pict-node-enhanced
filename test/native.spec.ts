@@ -5,6 +5,7 @@ import {
   NOT_RECORD_TYPES,
   NOT_STRING_TYPES,
   getTestModelContent,
+  expectAsyncToThrowError,
 } from "./utils";
 import url from "url";
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
@@ -15,11 +16,9 @@ describe("native()", () => {
       for (const notRecord of NOT_RECORD_TYPES) {
         // @ts-expect-error
         const act = async () => await native(notRecord);
-
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          "the first argument: must be a record"
+        await expectAsyncToThrowError(
+          act,
+          "the first argument: must be a record",
         );
       }
     });
@@ -32,10 +31,7 @@ describe("native()", () => {
             // @ts-expect-error
             options: notString,
           });
-
-        const result = expect(act);
-
-        await result.rejects.toThrowError('"options": must be a record');
+        await expectAsyncToThrowError(act, '"options": must be a record');
       }
     });
 
@@ -51,10 +47,9 @@ describe("native()", () => {
             },
           });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          '"options.order": must be a positive number'
+        await expectAsyncToThrowError(
+          act,
+          '"options.order": must be a positive number',
         );
       }
     });
@@ -74,10 +69,9 @@ describe("native()", () => {
             },
           });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          '"options.random": must be a number or boolean'
+        await expectAsyncToThrowError(
+          act,
+          '"options.random": must be a number or boolean',
         );
       }
     });
@@ -93,10 +87,9 @@ describe("native()", () => {
             },
           });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          '"options.caseSensitive": must be boolean'
+        await expectAsyncToThrowError(
+          act,
+          '"options.caseSensitive": must be boolean',
         );
       }
     });
@@ -111,9 +104,7 @@ describe("native()", () => {
             model: notString,
           });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError('"model": must be a string');
+        await expectAsyncToThrowError(act, '"model": must be a string');
       }
     });
 
@@ -127,10 +118,9 @@ describe("native()", () => {
             },
           });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          '"model": must be a string or a type { file: string }'
+        await expectAsyncToThrowError(
+          act,
+          '"model": must be a string or a type { file: string }',
         );
       }
     });
@@ -150,9 +140,7 @@ describe("native()", () => {
             seed: notString,
           });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError('"seed": must be a string');
+        await expectAsyncToThrowError(act, '"seed": must be a string');
       }
     });
 
@@ -167,10 +155,9 @@ describe("native()", () => {
             },
           });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          '"seed": must be a string or a type { file: string }'
+        await expectAsyncToThrowError(
+          act,
+          '"seed": must be a string or a type { file: string }',
         );
       }
     });
@@ -197,10 +184,9 @@ describe("native()", () => {
                 },
               });
 
-            const result = expect(act);
-
-            await result.rejects.toThrowError(
-              `"options.${separator}": must be a string containing a single character`
+            await expectAsyncToThrowError(
+              act,
+              `"options.${separator}": must be a string containing a single character`,
             );
           }
         });
@@ -334,7 +320,7 @@ describe("native()", () => {
     test("The large model with all combinations (in the file)", async () => {
       const modelPath = path.resolve(
         __dirname,
-        "./models/model-all-combinations"
+        "./models/model-all-combinations",
       );
 
       const result = await native({

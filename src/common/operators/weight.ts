@@ -22,7 +22,7 @@ export function weight<T extends unknown>(value: T, weight: number) {
 }
 
 export function isWeightOperator(
-  value: unknown
+  value: unknown,
 ): value is WeightOperatorObject<unknown> {
   return isRecord(value) && WEIGHT_OPERATOR in value;
 }

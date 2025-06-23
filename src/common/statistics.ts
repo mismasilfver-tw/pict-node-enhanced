@@ -58,6 +58,6 @@ export function parseStatistics(raw: string, generationTimeNodeJs: number) {
       (stats, item) => {
         return { ...stats, ...item } as PictNodeStatistics;
       },
-      { generationTimeNodeJs }
+      { generationTimeNodeJs },
     ) as PictNodeStatistics;
 }

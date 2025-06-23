@@ -43,8 +43,39 @@ export const NOT_PROPERTY_KEY_TYPES = EXCLUDE_TYPES([
 
 export async function getTestModelContent(fileName: string) {
   const buffer = await fsp.readFile(
-    path.join(__dirname, `./models/${fileName}`)
+    path.join(__dirname, `./models/${fileName}`),
   );
 
   return buffer.toString();
+}
+
+/**
+ * Helper function to test for errors in a way that's compatible with both Jest 29 and Jest 30
+ * This replaces the deprecated toThrowError matcher
+ */
+export function expectToThrowError(fn: () => any, errorMessage: string) {
+  try {
+    fn();
+    // If we get here, the function didn't throw
+    expect(true).toBe(false); // Force a test failure
+  } catch (error: any) {
+    expect(error.message).toContain(errorMessage);
+  }
+}
+
+/**
+ * Helper function to test for errors in async functions
+ * This replaces the deprecated toThrowError matcher for async functions
+ */
+export async function expectAsyncToThrowError(
+  fn: () => Promise<any>,
+  errorMessage: string,
+) {
+  try {
+    await fn();
+    // If we get here, the function didn't throw
+    expect(true).toBe(false); // Force a test failure
+  } catch (error: any) {
+    expect(error.message).toContain(errorMessage);
+  }
 }

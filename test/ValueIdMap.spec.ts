@@ -1,4 +1,5 @@
 import { ValuesIdMap } from "../src/api/pict/ValuesIdMap";
+import { expectToThrowError } from "./utils";
 
 describe("ValuesIdMap", () => {
   let instance: ValuesIdMap;
@@ -12,20 +13,14 @@ describe("ValuesIdMap", () => {
       instance.add("param", "0", "value", "0.0");
 
       const act = () => instance.add("param", "0", "value", "0.0");
-
-      const result = expect(act);
-
-      result.toThrowError('Value "value" has already existed');
+      expectToThrowError(act, 'Value "value" has already existed');
     });
 
     test("Should throw an error if parameters value id has already been added", () => {
       instance.add("param_1", "0", "value1", "0.0");
 
       const act = () => instance.add("param_2", "1", "value2", "0.0");
-
-      const result = expect(act);
-
-      result.toThrowError(`Id "0.0" has already existed`);
+      expectToThrowError(act, `Id "0.0" has already existed`);
     });
   });
 
@@ -34,10 +29,7 @@ describe("ValuesIdMap", () => {
       instance.add("key", "2", { a: "b" }, "1.0");
 
       const act = () => instance.getParameterIdByParameterName("_key");
-
-      const result = expect(act);
-
-      result.toThrowError(`Parameter "_key" has been not found`);
+      expectToThrowError(act, `Parameter "_key" has been not found`);
     });
 
     test("Should return parameters id", () => {
@@ -57,10 +49,7 @@ describe("ValuesIdMap", () => {
     test("Should throw an error if value not found", () => {
       instance.add("parameter", "0", "value", "0.0");
       const act = () => instance.getValueByValueId("6.6");
-
-      const result = expect(act);
-
-      result.toThrowError('Value with id "6.6" not found');
+      expectToThrowError(act, 'Value with id "6.6" not found');
     });
 
     test("Should return value", () => {
@@ -90,20 +79,17 @@ describe("ValuesIdMap", () => {
       instance.add("parameter", "0", "value", "0.0");
       const act = () =>
         instance.getParameterAndValueIdFromValues("invalid-parameter", "value");
-
-      const result = expect(act);
-
-      result.toThrowError(`Parameter "invalid-parameter" has been not found`);
+      expectToThrowError(
+        act,
+        `Parameter "invalid-parameter" has been not found`,
+      );
     });
 
     test("Should throw an error if value not found", () => {
       instance.add("parameter", "0", "value", "0.0");
       const act = () =>
         instance.getParameterAndValueIdFromValues("parameter", "invalid-value");
-
-      const result = expect(act);
-
-      result.toThrowError(`Value "invalid-value" has been not found`);
+      expectToThrowError(act, `Value "invalid-value" has been not found`);
     });
 
     test("Should return parameter and value id", () => {
@@ -118,7 +104,7 @@ describe("ValuesIdMap", () => {
 
       const result = instance.getParameterAndValueIdFromValues(
         parameter,
-        value
+        value,
       );
 
       expect(result).toEqual({

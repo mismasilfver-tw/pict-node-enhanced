@@ -36,7 +36,7 @@ type Strings = {
       seed?: InputSeed<M>;
       constraints?: InputConstraints;
     },
-    options?: StringsOptions
+    options?: StringsOptions,
   ): Promise<Array<InputPictModelToRecord<M>>>;
   stats: <M extends ReadonlyArray<PictStringModel>>(
     model: {
@@ -45,7 +45,7 @@ type Strings = {
       seed?: InputSeed<M>;
       constraints?: InputConstraints;
     },
-    options?: StringsOptions
+    options?: StringsOptions,
   ) => Promise<PictNodeStatistics>;
 };
 
@@ -56,7 +56,7 @@ function prepare<M extends ReadonlyArray<PictStringModel>>(
     seed?: InputSeed<M>;
     constraints?: InputConstraints;
   },
-  options?: StringsOptions
+  options?: StringsOptions,
 ) {
   isRecord.assert(model, "the first argument");
   isArray.assert(model.model, '"model"');
@@ -93,21 +93,21 @@ function prepare<M extends ReadonlyArray<PictStringModel>>(
   if (!isUndefined(validatedOptions.aliasSeparator)) {
     isModelSeparator.assert(
       validatedOptions.aliasSeparator,
-      '"aliasSeparator"'
+      '"aliasSeparator"',
     );
   }
 
   if (!isUndefined(validatedOptions.valueSeparator)) {
     isModelSeparator.assert(
       validatedOptions.valueSeparator,
-      '"valueSeparator"'
+      '"valueSeparator"',
     );
   }
 
   if (!isUndefined(validatedOptions.negativePrefix)) {
     isModelSeparator.assert(
       validatedOptions.negativePrefix,
-      '"negativePrefix"'
+      '"negativePrefix"',
     );
   }
 
@@ -147,7 +147,7 @@ function prepare<M extends ReadonlyArray<PictStringModel>>(
 }
 
 export const strings: Strings = async function strings<
-  M extends ReadonlyArray<PictStringModel>
+  M extends ReadonlyArray<PictStringModel>,
 >(
   model: {
     model: M;
@@ -155,7 +155,7 @@ export const strings: Strings = async function strings<
     seed?: InputSeed<M>;
     constraints?: InputConstraints;
   },
-  options?: StringsOptions
+  options?: StringsOptions,
 ) {
   try {
     const callPictOptions = prepare(model, options);
@@ -170,7 +170,7 @@ export const strings: Strings = async function strings<
 };
 
 strings.stats = async function strings<
-  M extends ReadonlyArray<PictStringModel>
+  M extends ReadonlyArray<PictStringModel>,
 >(
   model: {
     model: M;
@@ -178,7 +178,7 @@ strings.stats = async function strings<
     seed?: InputSeed<M>;
     constraints?: InputConstraints;
   },
-  options?: StringsOptions
+  options?: StringsOptions,
 ) {
   try {
     const start = performance.now();

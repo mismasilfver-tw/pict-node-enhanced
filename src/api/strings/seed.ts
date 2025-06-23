@@ -5,7 +5,7 @@ import type { PictStringModel } from "./types";
 
 export function createSeed<
   S extends InputSeed<ReadonlyArray<PictModel>>,
-  M extends ReadonlyArray<PictStringModel>
+  M extends ReadonlyArray<PictStringModel>,
 >(seeds: S, models: M) {
   const seedBuilder = new SeedBuilder();
 
@@ -25,7 +25,7 @@ export function createSeed<
 
       if (!value) {
         throw new Error(
-          `The value "${itemValue}" does not exist in the model for the parameter "${key}"`
+          `The value "${itemValue}" does not exist in the model for the parameter "${key}"`,
         );
       }
 

@@ -20,5 +20,5 @@ export const isPictTypedModel: TypeGuard<PictTypedModel> = createTypeGuard(
     }
 
     return true;
-  }
+  },
 );

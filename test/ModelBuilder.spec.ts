@@ -1,5 +1,10 @@
 import { ModelBuilder } from "../src/common/ModelBuilder";
-import { EXCLUDE_TYPES, NOT_NUMBER_TYPES, NOT_STRING_TYPES } from "./utils";
+import {
+  EXCLUDE_TYPES,
+  NOT_NUMBER_TYPES,
+  NOT_STRING_TYPES,
+  expectToThrowError,
+} from "./utils";
 import { EOL } from "os";
 
 describe("ModelBuilder", () => {
@@ -49,9 +54,7 @@ describe("ModelBuilder", () => {
       // @ts-expect-error
       const act = () => new ModelBuilder(invalidOptions);
 
-      const result = expect(act);
-
-      result.toThrowError("Separator must be a string");
+      expectToThrowError(act, "Separator must be a string");
     }
   });
 
@@ -65,9 +68,7 @@ describe("ModelBuilder", () => {
 
       const act = () => new ModelBuilder(invalidOptions);
 
-      const result = expect(act);
-
-      result.toThrowError("Separator must be a single character");
+      expectToThrowError(act, "Separator must be a single character");
     }
   });
 
@@ -76,18 +77,14 @@ describe("ModelBuilder", () => {
       // @ts-expect-error
       const act = () => instance.addParameter("key", notString);
 
-      const result = expect(act);
-
-      result.toThrowError("Value must be a string");
+      expectToThrowError(act, "Value must be a string");
     }
 
     for (const notString of NOT_STRING_TYPES) {
       // @ts-expect-error
       const act = () => instance.addParameter(notString, "value");
 
-      const result = expect(act);
-
-      result.toThrowError("Value must be a string");
+      expectToThrowError(act, "Value must be a string");
     }
   });
 
@@ -97,9 +94,7 @@ describe("ModelBuilder", () => {
         // @ts-expect-error
         instance.addAliasParameter("key", ["string", notString]);
 
-      const result = expect(act);
-
-      result.toThrowError("Value must be a string");
+      expectToThrowError(act, "Value must be a string");
     }
 
     for (const notString of NOT_STRING_TYPES) {
@@ -107,9 +102,7 @@ describe("ModelBuilder", () => {
         // @ts-expect-error
         instance.addAliasParameter(notString, ["value", "_value_"]);
 
-      const result = expect(act);
-
-      result.toThrowError("Value must be a string");
+      expectToThrowError(act, "Value must be a string");
     }
   });
 
@@ -118,18 +111,14 @@ describe("ModelBuilder", () => {
       // @ts-expect-error
       const act = () => instance.addNegativeParameter("key", notString);
 
-      const result = expect(act);
-
-      result.toThrowError("Value must be a string");
+      expectToThrowError(act, "Value must be a string");
     }
 
     for (const notString of NOT_STRING_TYPES) {
       // @ts-expect-error
       const act = () => instance.addNegativeParameter(notString, "value");
 
-      const result = expect(act);
-
-      result.toThrowError("Value must be a string");
+      expectToThrowError(act, "Value must be a string");
     }
   });
 
@@ -138,18 +127,14 @@ describe("ModelBuilder", () => {
       // @ts-expect-error
       const act = () => instance.addParameterWithWeight("key", notString, 1);
 
-      const result = expect(act);
-
-      result.toThrowError("Value must be a string");
+      expectToThrowError(act, "Value must be a string");
     }
 
     for (const notString of NOT_STRING_TYPES) {
       // @ts-expect-error
       const act = () => instance.addParameterWithWeight(notString, "value", 1);
 
-      const result = expect(act);
-
-      result.toThrowError("Value must be a string");
+      expectToThrowError(act, "Value must be a string");
     }
   });
 
@@ -159,9 +144,7 @@ describe("ModelBuilder", () => {
         // @ts-expect-error
         instance.addParameterWithWeight("key", "value", notNumber);
 
-      const result = expect(act);
-
-      result.toThrowError("Weight must be a number");
+      expectToThrowError(act, "Weight must be a number");
     }
   });
 
@@ -179,9 +162,7 @@ describe("ModelBuilder", () => {
 
       const act = () => instance.addSubModel([invalidKey], 2);
 
-      const result = expect(act);
-
-      result.toThrowError(`Parameter "${invalidKey}" is not defined`);
+      expectToThrowError(act, `Parameter "${invalidKey}" is not defined`);
     }
 
     {
@@ -191,9 +172,7 @@ describe("ModelBuilder", () => {
 
       const act = () => instance.addSubModel([invalidKey], 2);
 
-      const result = expect(act);
-
-      result.toThrowError(`Parameter "${invalidKey}" is not defined`);
+      expectToThrowError(act, `Parameter "${invalidKey}" is not defined`);
     }
 
     {
@@ -203,9 +182,7 @@ describe("ModelBuilder", () => {
 
       const act = () => instance.addSubModel([invalidKey], 2);
 
-      const result = expect(act);
-
-      result.toThrowError(`Parameter "${invalidKey}" is not defined`);
+      expectToThrowError(act, `Parameter "${invalidKey}" is not defined`);
     }
 
     {
@@ -215,9 +192,7 @@ describe("ModelBuilder", () => {
 
       const act = () => instance.addSubModel([invalidKey], 2);
 
-      const result = expect(act);
-
-      result.toThrowError(`Parameter "${invalidKey}" is not defined`);
+      expectToThrowError(act, `Parameter "${invalidKey}" is not defined`);
     }
   });
 
@@ -232,18 +207,14 @@ describe("ModelBuilder", () => {
       const act = () =>
         instance.addParameter("key", `value${aliasSeparator}value`);
 
-      const result = expect(act);
-
-      result.toThrowError(`Value cannot contain the alias separator`);
+      expectToThrowError(act, `Value cannot contain the alias separator`);
     }
 
     {
       const act = () =>
         instance.addParameter(`key${aliasSeparator}key`, `value`);
 
-      const result = expect(act);
-
-      result.toThrowError(`Value cannot contain the alias separator`);
+      expectToThrowError(act, `Value cannot contain the alias separator`);
     }
   });
 
@@ -261,9 +232,7 @@ describe("ModelBuilder", () => {
           "validValue",
         ]);
 
-      const result = expect(act);
-
-      result.toThrowError(`Value cannot contain the alias separator`);
+      expectToThrowError(act, `Value cannot contain the alias separator`);
     }
 
     {
@@ -273,9 +242,7 @@ describe("ModelBuilder", () => {
           "value2",
         ]);
 
-      const result = expect(act);
-
-      result.toThrowError(`Value cannot contain the alias separator`);
+      expectToThrowError(act, `Value cannot contain the alias separator`);
     }
   });
 
@@ -290,18 +257,14 @@ describe("ModelBuilder", () => {
       const act = () =>
         instance.addNegativeParameter("key", `value${aliasSeparator}value`);
 
-      const result = expect(act);
-
-      result.toThrowError(`Value cannot contain the alias separator`);
+      expectToThrowError(act, `Value cannot contain the alias separator`);
     }
 
     {
       const act = () =>
         instance.addNegativeParameter(`key${aliasSeparator}key`, "value");
 
-      const result = expect(act);
-
-      result.toThrowError(`Value cannot contain the alias separator`);
+      expectToThrowError(act, `Value cannot contain the alias separator`);
     }
   });
 
@@ -317,21 +280,17 @@ describe("ModelBuilder", () => {
         instance.addParameterWithWeight(
           "key",
           `value${aliasSeparator}value`,
-          2
+          2,
         );
 
-      const result = expect(act);
-
-      result.toThrowError(`Value cannot contain the alias separator`);
+      expectToThrowError(act, `Value cannot contain the alias separator`);
     }
 
     {
       const act = () =>
         instance.addParameterWithWeight(`key${aliasSeparator}key`, "value", 2);
 
-      const result = expect(act);
-
-      result.toThrowError(`Value cannot contain the alias separator`);
+      expectToThrowError(act, `Value cannot contain the alias separator`);
     }
   });
 
@@ -353,7 +312,7 @@ describe("ModelBuilder", () => {
     
     1 one 
     
-            `
+            `,
     );
     instance.addParameter("A", "2");
     instance.addParameter(
@@ -362,7 +321,7 @@ describe("ModelBuilder", () => {
     B
     
             `,
-      "3"
+      "3",
     );
     instance.addParameter("B", "4");
 
@@ -387,7 +346,7 @@ describe("ModelBuilder", () => {
     const result = instance.getModelText();
 
     expect(result).toBe(
-      `A:1,2${EOL}B:3,4${EOL}C:5,6${EOL}D:7,8${EOL}{A,B}@2${EOL}{C,D}`
+      `A:1,2${EOL}B:3,4${EOL}C:5,6${EOL}D:7,8${EOL}{A,B}@2${EOL}{C,D}`,
     );
   });
 
@@ -408,7 +367,7 @@ describe("ModelBuilder", () => {
     const result = instance.getModelText();
 
     expect(result).toBe(
-      `A:1,2${EOL}B:3,4${EOL}C:5,6${EOL}D:7,8${EOL}{A,B}@2${EOL}{C,D}${EOL}IF [A] = "1"   THEN [B] <= 4;`
+      `A:1,2${EOL}B:3,4${EOL}C:5,6${EOL}D:7,8${EOL}{A,B}@2${EOL}{C,D}${EOL}IF [A] = "1"   THEN [B] <= 4;`,
     );
   });
 
@@ -430,7 +389,7 @@ describe("ModelBuilder", () => {
     const result = instance.getModelText();
 
     expect(result).toBe(
-      `A:1(2),2${EOL}B:3,4${EOL}C:5|five,6,~9${EOL}D:7,8${EOL}{A,B}@2${EOL}{C,D}${EOL}IF [A] = "1"   THEN [B] <= 4;`
+      `A:1(2),2${EOL}B:3,4${EOL}C:5|five,6,~9${EOL}D:7,8${EOL}{A,B}@2${EOL}{C,D}${EOL}IF [A] = "1"   THEN [B] <= 4;`,
     );
   });
 });

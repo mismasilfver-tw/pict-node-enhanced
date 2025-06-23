@@ -12,7 +12,7 @@ declare module "react-json-view-lite" {
     shouldInitiallyExpand?: (
       level: number,
       value: any,
-      field: string
+      field: string,
     ) => boolean;
   }
 

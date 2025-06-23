@@ -20,13 +20,13 @@ app.use("/api", routes);
 app.get("/", (req, res) => {
   const simplifiedAppPath = path.join(
     __dirname,
-    "../web-interface/src/simplified-app/index.html"
+    "../web-interface/src/simplified-app/index.html",
   );
   if (fs.existsSync(simplifiedAppPath)) {
     res.sendFile(simplifiedAppPath);
   } else {
     res.send(
-      "Simplified web interface not found. Please check the server configuration."
+      "Simplified web interface not found. Please check the server configuration.",
     );
   }
 });
@@ -47,7 +47,7 @@ app.listen(PORT, () => {
     console.log(`Web interface available at http://localhost:${PORT}`);
   } else {
     console.log(
-      `Web interface development server should be running separately`
+      `Web interface development server should be running separately`,
     );
   }
 });

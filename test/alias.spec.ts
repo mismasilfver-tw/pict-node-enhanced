@@ -1,4 +1,4 @@
-import { NOT_ARRAY_TYPES } from "./utils";
+import { NOT_ARRAY_TYPES, expectToThrowError } from "./utils";
 import { alias, ALIAS_OPERATOR } from "../src/common/operators/alias";
 
 describe('"alias" operator', () => {
@@ -6,7 +6,7 @@ describe('"alias" operator', () => {
     for (const notArray of NOT_ARRAY_TYPES) {
       // @ts-expect-error
       const act = () => alias(notArray);
-      expect(act).toThrowError("Alias values must be an array");
+      expectToThrowError(act, "Alias values must be an array");
     }
   });
 

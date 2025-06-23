@@ -25,7 +25,7 @@ export const isInputConstraints: TypeGuard<InputConstraints> = createTypeGuard(
   "must be a string or an array of strings",
   (value: unknown): value is InputConstraints => {
     return isString(value) || isArray(value);
-  }
+  },
 );
 
 export type PictStringModel = PictModel<
@@ -52,5 +52,5 @@ export const isPictStringModel: TypeGuard<PictStringModel> = createTypeGuard(
     }
 
     return true;
-  }
+  },
 );

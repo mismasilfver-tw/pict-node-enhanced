@@ -47,26 +47,26 @@ function validate(options: NativeOptions) {
     if (!isUndefined(options.options.aliasSeparator)) {
       isModelSeparator.assert(
         options.options.aliasSeparator,
-        '"options.aliasSeparator"'
+        '"options.aliasSeparator"',
       );
     }
     if (!isUndefined(options.options.valueSeparator)) {
       isModelSeparator.assert(
         options.options.aliasSeparator,
-        '"options.valueSeparator"'
+        '"options.valueSeparator"',
       );
     }
     if (!isUndefined(options.options.negativePrefix)) {
       isModelSeparator.assert(
         options.options.aliasSeparator,
-        '"options.negativePrefix"'
+        '"options.negativePrefix"',
       );
     }
 
     if (!isUndefined(options.options.caseSensitive)) {
       isBoolean.assert(
         options.options.caseSensitive,
-        '"options.caseSensitive"'
+        '"options.caseSensitive"',
       );
     }
   }

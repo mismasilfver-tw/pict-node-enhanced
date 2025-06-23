@@ -4,6 +4,7 @@ import {
   NOT_ARRAY_TYPES,
   EXCLUDE_TYPES,
   NOT_STRING_TYPES,
+  expectAsyncToThrowError,
 } from "./utils";
 import { strings } from "../src/api/strings";
 import type { InputSubModel } from "../src/common/types";
@@ -16,9 +17,10 @@ describe("strings()", () => {
     test("Should throw an error if the first argument is not a record", async () => {
       for (const notRecord of NOT_RECORD_TYPES) {
         // @ts-expect-error
-        const act = () => strings(notRecord);
-        await expect(act).rejects.toThrowError(
-          "the first argument: must be a record"
+        const act = async () => await strings(notRecord);
+        await expectAsyncToThrowError(
+          act,
+          "the first argument: must be a record",
         );
       }
     });
@@ -38,11 +40,9 @@ describe("strings()", () => {
       for (const notRecord of EXCLUDE_TYPES(["undefined", "record"])) {
         // @ts-expect-error
         const act = async () => await strings({ model }, notRecord);
-
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          "the second argument: must be a record"
+        await expectAsyncToThrowError(
+          act,
+          "the second argument: must be a record",
         );
       }
     });
@@ -68,12 +68,13 @@ describe("strings()", () => {
             {
               // @ts-expect-error
               order: invalidType,
-            }
+            },
           );
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError('"order": must be a positive number');
+        await expectAsyncToThrowError(
+          act,
+          '"order": must be a positive number',
+        );
       }
     });
 
@@ -100,13 +101,12 @@ describe("strings()", () => {
           },
           {
             order: 4,
-          }
+          },
         );
 
-      const result = expect(act);
-
-      await result.rejects.toThrowError(
-        '"order" cannot be larger than number of parameters'
+      await expectAsyncToThrowError(
+        act,
+        '"order" cannot be larger than number of parameters',
       );
     });
 
@@ -135,13 +135,12 @@ describe("strings()", () => {
             {
               // @ts-expect-error
               random: invalidType,
-            }
+            },
           );
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          "options.random: must be a number or boolean"
+        await expectAsyncToThrowError(
+          act,
+          "options.random: must be a number or boolean",
         );
       }
     });
@@ -167,12 +166,10 @@ describe("strings()", () => {
             {
               // @ts-expect-error
               caseSensitive: invalidType,
-            }
+            },
           );
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError('"caseSensitive": must be boolean');
+        await expectAsyncToThrowError(act, '"caseSensitive": must be boolean');
       }
     });
   });
@@ -197,7 +194,10 @@ describe("strings()", () => {
             model,
           });
 
-        expect(act).rejects.toThrow("model[0].values[1]: must be a string");
+        await expectAsyncToThrowError(
+          act,
+          "model[0].values[1]: must be a string",
+        );
       }
     });
 
@@ -221,7 +221,10 @@ describe("strings()", () => {
             model,
           });
 
-        expect(act).rejects.toThrow("model[0].values[0]: must be a string");
+        await expectAsyncToThrowError(
+          act,
+          "model[0].values[0]: must be a string",
+        );
       }
     });
 
@@ -245,7 +248,10 @@ describe("strings()", () => {
             model,
           });
 
-        expect(act).rejects.toThrow("model[1].values[1]: must be a string");
+        await expectAsyncToThrowError(
+          act,
+          "model[1].values[1]: must be a string",
+        );
       }
     });
   });
@@ -281,13 +287,12 @@ describe("strings()", () => {
                 },
                 {
                   [separator]: format,
-                }
+                },
               );
 
-            const result = expect(act);
-
-            await result.rejects.toThrowError(
-              `"${separator}": must be a string containing a single character`
+            await expectAsyncToThrowError(
+              act,
+              `"${separator}": must be a string containing a single character`,
             );
           }
         });
@@ -303,8 +308,7 @@ describe("strings()", () => {
             // @ts-expect-error
             model: notArray,
           });
-        const result = expect(act);
-        await result.rejects.toThrowError('"model": must be an array');
+        await expectAsyncToThrowError(act, '"model": must be an array');
       }
     });
 
@@ -314,8 +318,10 @@ describe("strings()", () => {
           model: [],
         });
 
-      const result = expect(act);
-      await result.rejects.toThrowError('"model" must contain at least 1 item');
+      await expectAsyncToThrowError(
+        act,
+        '"model" must contain at least 1 item',
+      );
     });
 
     test("Should throw an error if model contain an invalid parameter", async () => {
@@ -352,10 +358,9 @@ describe("strings()", () => {
         // @ts-expect-error
         const act = async () => await strings({ model: item.model });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          `model[${item.index}]: must be a type { key: string, values: Array<string> }`
+        await expectAsyncToThrowError(
+          act,
+          `model[${item.index}]: must be a type { key: string, values: Array<string> }`,
         );
       }
     });
@@ -378,10 +383,9 @@ describe("strings()", () => {
         // @ts-expect-error
         const act = async () => await strings({ model: item.model });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          `model[${item.parameterIndex}].values[${item.valueIndex}]: must be a string`
+        await expectAsyncToThrowError(
+          act,
+          `model[${item.parameterIndex}].values[${item.valueIndex}]: must be a string`,
         );
       }
     });
@@ -403,8 +407,7 @@ describe("strings()", () => {
             // @ts-expect-error
             sub: notRecord,
           });
-        const result = expect(act);
-        await result.rejects.toThrowError('"sub": must be an array');
+        await expectAsyncToThrowError(act, '"sub": must be an array');
       }
     });
 
@@ -431,9 +434,7 @@ describe("strings()", () => {
           ],
         });
 
-      const result = expect(act);
-
-      await result.rejects.toThrowError(`Parameter "C" is not defined`);
+      await expectAsyncToThrowError(act, `Parameter "C" is not defined`);
     });
 
     test("Should throw an error if sub models contains an invalid type", async () => {
@@ -502,10 +503,9 @@ describe("strings()", () => {
             sub: item.subModels,
           });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          `sub[${item.index}]: must be an type { keys: Array<PropertyKey>; order?: number }`
+        await expectAsyncToThrowError(
+          act,
+          `sub[${item.index}]: must be an type { keys: Array<PropertyKey>; order?: number }`,
         );
       }
     });
@@ -532,10 +532,9 @@ describe("strings()", () => {
             seed: invalidType,
           });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          `"seed": must be an array Array<{ [key: PropertyKey]: unknown }>`
+        await expectAsyncToThrowError(
+          act,
+          `"seed": must be an array Array<{ [key: PropertyKey]: unknown }>`,
         );
       }
     });
@@ -562,10 +561,9 @@ describe("strings()", () => {
           ],
         });
 
-      const result = expect(act);
-
-      await result.rejects.toThrowError(
-        `The parameter "C" does not exist in the model`
+      await expectAsyncToThrowError(
+        act,
+        `The parameter "C" does not exist in the model`,
       );
     });
     test("Should throw an error if seed parameter value is not in the model", async () => {
@@ -591,10 +589,9 @@ describe("strings()", () => {
           ],
         });
 
-      const result = expect(act);
-
-      await result.rejects.toThrowError(
-        `The value "3" does not exist in the model for the parameter "A"`
+      await expectAsyncToThrowError(
+        act,
+        `The value "3" does not exist in the model for the parameter "A"`,
       );
     });
   });
@@ -624,10 +621,9 @@ describe("strings()", () => {
             constraints: invalidType,
           });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(
-          `"constraints": must be a string or an array of strings`
+        await expectAsyncToThrowError(
+          act,
+          `"constraints": must be a string or an array of strings`,
         );
       }
     });
@@ -655,9 +651,7 @@ describe("strings()", () => {
             ],
           });
 
-        const result = expect(act);
-
-        await result.rejects.toThrowError(`constraints[1]: must be a string`);
+        await expectAsyncToThrowError(act, `constraints[1]: must be a string`);
       }
     });
   });
@@ -829,7 +823,7 @@ describe("strings()", () => {
         },
         {
           order: model.length,
-        }
+        },
       );
 
       expect(result).toHaveLength(27);
@@ -970,7 +964,7 @@ describe("strings()", () => {
         },
         {
           order: model.length,
-        }
+        },
       );
 
       expect(result).toEqual({

@@ -1,7 +1,7 @@
 import { pictEntries } from "../../common/pict";
 
 export function parseResult(
-  result: string
+  result: string,
 ): Array<Record<PropertyKey, unknown>> {
   const cases: any[] = [];
 
