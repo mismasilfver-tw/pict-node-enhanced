@@ -23,10 +23,10 @@ const ConstraintsEditor = ({
 
     // Format constraint - ensure proper syntax
     let formattedConstraint = newConstraint.trim();
-    
+
     // Remove semicolon if present (we'll add it back in the server)
-    formattedConstraint = formattedConstraint.replace(/;\s*$/, '');
-    
+    formattedConstraint = formattedConstraint.replace(/;\s*$/, "");
+
     // Basic validation - check if the constraint contains parameter names
     const isValid = model.some((param) =>
       formattedConstraint.includes(`[${param.key}]`)
@@ -38,13 +38,16 @@ const ConstraintsEditor = ({
       );
       return;
     }
-    
+
     // Check for proper syntax of comparison operators
-    if (formattedConstraint.includes("<>") && !formattedConstraint.includes(" <> ")) {
+    if (
+      formattedConstraint.includes("<>") &&
+      !formattedConstraint.includes(" <> ")
+    ) {
       // Add spaces around the not-equal operator for better parsing
       formattedConstraint = formattedConstraint.replace(/<>/g, " <> ");
     }
-    
+
     // Check for quotes around string values
     if (formattedConstraint.includes("=")) {
       // Ensure string values are properly quoted
@@ -55,7 +58,10 @@ const ConstraintsEditor = ({
           if (!valuePart.startsWith('"') && !valuePart.startsWith("'")) {
             // This is a potential issue, but we'll let the server handle it
             // Just log a warning for now
-            console.warn("Value in constraint may need quotes:", formattedConstraint);
+            console.warn(
+              "Value in constraint may need quotes:",
+              formattedConstraint
+            );
           }
         }
       }
@@ -103,9 +109,12 @@ const ConstraintsEditor = ({
           [parameter2] &lt;&gt; "value2";
         </p>
         <Alert variant="info">
-          <strong>Important:</strong> When comparing numeric values, do NOT use quotes. Example: <br/>
-          <code>IF [fileSystem] = "FAT" THEN [size] &lt;&gt; 10000</code> (correct) <br/>
-          <code>IF [fileSystem] = "FAT" THEN [size] &lt;&gt; "10000"</code> (incorrect)
+          <strong>Important:</strong> When comparing numeric values, do NOT use
+          quotes. Example: <br />
+          <code>IF [fileSystem] = "FAT" THEN [size] &lt;&gt; 10000</code>{" "}
+          (correct) <br />
+          <code>IF [fileSystem] = "FAT" THEN [size] &lt;&gt; "10000"</code>{" "}
+          (incorrect)
         </Alert>
 
         {error && <Alert variant="danger">{error}</Alert>}
@@ -177,8 +186,8 @@ const ConstraintsEditor = ({
               Parameter must be one of the string values
             </li>
             <li>
-              <code>[param] IN &#123;1, 2, 3&#125;;</code> -
-              Parameter must be one of the numeric values (no quotes)
+              <code>[param] IN &#123;1, 2, 3&#125;;</code> - Parameter must be
+              one of the numeric values (no quotes)
             </li>
             <li>
               <code>[param1] = "value1" AND [param2] = "value2";</code> -
