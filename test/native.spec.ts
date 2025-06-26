@@ -7,8 +7,6 @@ import {
   getTestModelContent,
   expectAsyncToThrowError,
 } from "./utils";
-import url from "url";
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 describe("native()", () => {
   describe("Common Validation", () => {

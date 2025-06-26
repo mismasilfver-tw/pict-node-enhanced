@@ -5,8 +5,9 @@ import { writeTempFile } from "./utils";
 import { isBoolean, isNumber, isString, isUndefined } from "tsguarder";
 import path from "path";
 import { EOL } from "os";
-import url from "url";
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+// Use a CommonJS compatible approach for getting the directory path
+// This avoids the need for import.meta.url which requires ES modules
+const PICT_DIR_PATH = process.cwd() + "/src/common";
 
 export interface CallPictOptions {
   modelText: string;
@@ -26,8 +27,8 @@ export interface CallPictOptions {
 
 function getBinaryPath() {
   const root = IS_PICT_DEV
-    ? path.resolve(__dirname, "..", "..")
-    : path.resolve(__dirname, "..");
+    ? path.resolve(PICT_DIR_PATH, "..", "..")
+    : path.resolve(PICT_DIR_PATH, "..");
 
   if (IS_WIN) {
     return path.join(root, "bin", "pict.exe");

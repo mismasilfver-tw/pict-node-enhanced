@@ -28,6 +28,7 @@
     "build": "rm -rf lib && rm -rf dts && npm run build:dts && rollup -c rollup.config.cjs --bundleConfigAsCjs && rm -rf dts",
     "lint": "eslint .",
     "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write .",
     "pict": "node ./scripts/pict-install.js --verbose",
     "prepare": "husky install",
     "postinstall": "npm run pict",
