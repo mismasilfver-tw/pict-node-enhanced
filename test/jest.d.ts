@@ -1,5 +1,3 @@
-import "jest-extended";
-
 // Type definitions for Jest global functions
 declare global {
   // Jest globals
@@ -16,3 +14,5 @@ declare global {
   const fit: typeof test;
   const xit: typeof test;
 }
+
+export {};

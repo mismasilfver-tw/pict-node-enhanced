@@ -157,16 +157,11 @@ export const strings: Strings = async function strings<
   },
   options?: StringsOptions,
 ) {
-  try {
-    const callPictOptions = prepare(model, options);
+  const callPictOptions = prepare(model, options);
 
-    const result = await callPict(callPictOptions);
+  const result = await callPict(callPictOptions);
 
-    return parseResult(result) as Array<InputPictModelToRecord<M>>;
-  } catch (error) {
-    console.error('Error while calling "strings" function.');
-    throw error;
-  }
+  return parseResult(result) as Array<InputPictModelToRecord<M>>;
 };
 
 strings.stats = async function strings<
@@ -180,20 +175,13 @@ strings.stats = async function strings<
   },
   options?: StringsOptions,
 ) {
-  try {
-    const start = performance.now();
+  const start = performance.now();
 
-    const callPictOptions = prepare(model, options);
+  const callPictOptions = prepare(model, options);
+  callPictOptions.options.statistics = true;
 
-    callPictOptions.options.statistics = true;
+  const result = await callPict(callPictOptions);
+  const end = performance.now() - start;
 
-    const result = await callPict(callPictOptions);
-
-    const end = performance.now() - start;
-
-    return parseStatistics(result, end);
-  } catch (error) {
-    console.error('Error while calling "strings.stats" function.');
-    throw error;
-  }
+  return parseStatistics(result, end);
 };

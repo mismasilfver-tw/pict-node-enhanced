@@ -1,7 +1,9 @@
 import fsp from "fs/promises";
 import path from "path";
-import url from "url";
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+
+// Use a CommonJS compatible approach for getting the directory path
+// This avoids the need for import.meta.url which requires ES modules
+const TEST_DIR_PATH = process.cwd() + "/test";
 
 const types = Object.freeze({
   null: null,
@@ -43,7 +45,7 @@ export const NOT_PROPERTY_KEY_TYPES = EXCLUDE_TYPES([
 
 export async function getTestModelContent(fileName: string) {
   const buffer = await fsp.readFile(
-    path.join(__dirname, `./models/${fileName}`),
+    path.join(TEST_DIR_PATH, `./models/${fileName}`),
   );
 
   return buffer.toString();
@@ -76,6 +78,13 @@ export async function expectAsyncToThrowError(
     // If we get here, the function didn't throw
     expect(true).toBe(false); // Force a test failure
   } catch (error: any) {
-    expect(error.message).toContain(errorMessage);
+    try {
+      expect(error.message).toContain(errorMessage);
+    } catch (e) {
+      // Provide more detailed error information
+      console.error(`Expected error message to contain: "${errorMessage}"`);
+      console.error(`Actual error message: "${error.message}"`);
+      throw e;
+    }
   }
 }
