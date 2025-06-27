@@ -479,6 +479,15 @@ The following are potential improvements to the constraints editor UI to make it
     - Ensure the interface is fully accessible with screen readers
     - Add tab navigation between constraint components
 
+## Development Roadmap
+
+### Test Infrastructure Improvements
+
+1. **Fix Console Error Messages in Tests**
+   - Remove noisy `console.error` logging in the `pict` module similar to what was done for the `strings` module
+   - Clean up test output to make debugging easier and improve test readability
+   - Ensure all test error handling follows consistent patterns
+
 ### Additional Web Interface Features
 
 The following features from the core library are not yet implemented in the web interface:
