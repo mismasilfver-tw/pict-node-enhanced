@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { Form, Button, Card, Alert } from "react-bootstrap";
+import "codemirror/lib/codemirror.css";
+import "codemirror/theme/material.css";
+import "codemirror/mode/javascript/javascript";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { Controlled: CodeMirror } = require("react-codemirror2");
 
 interface ConstraintsEditorProps {
   model: any[];
   constraints: string[];
   onChange: (constraints: string[]) => void;
 }
+
 
 const ConstraintsEditor = ({
   model,
@@ -14,6 +20,45 @@ const ConstraintsEditor = ({
 }: ConstraintsEditorProps) => {
   const [newConstraint, setNewConstraint] = useState("");
   const [error, setError] = useState("");
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editingValue, setEditingValue] = useState("");
+
+  const startEdit = (index: number, value: string) => {
+    setEditingIndex(index);
+    setEditingValue(value);
+    setError("");
+  };
+
+  const cancelEdit = () => {
+    setEditingIndex(null);
+    setEditingValue("");
+    setError("");
+  };
+
+  const saveEdit = (index: number) => {
+    // Basic validation (reuse logic from addConstraint)
+    if (!editingValue.trim()) {
+      setError("Constraint cannot be empty");
+      return;
+    }
+    let formattedConstraint = editingValue.trim();
+    formattedConstraint = formattedConstraint.replace(/;\s*$/, "");
+    const isValid = model.some((param) => formattedConstraint.includes(`[${param.key}]`));
+    if (!isValid) {
+      setError("Constraint should reference at least one parameter using [parameter_name] syntax");
+      return;
+    }
+    if (formattedConstraint.includes("<>") && !formattedConstraint.includes(" <> ")) {
+      formattedConstraint = formattedConstraint.replace(/<>/g, " <> ");
+    }
+    // Save
+    const updated = [...constraints];
+    updated[index] = formattedConstraint;
+    onChange(updated);
+    setEditingIndex(null);
+    setEditingValue("");
+    setError("");
+  };
 
   const addConstraint = () => {
     if (!newConstraint.trim()) {
@@ -152,14 +197,58 @@ const ConstraintsEditor = ({
                   key={index}
                   className="list-group-item d-flex justify-content-between align-items-center"
                 >
-                  <code>{constraint}</code>
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => removeConstraint(index)}
-                  >
-                    Remove
-                  </Button>
+                  {editingIndex === index ? (
+  <div style={{ width: "100%" }}>
+    <div style={{ marginBottom: "10px" }}>
+      <CodeMirror
+        value={editingValue}
+        options={{
+          mode: "javascript",
+          theme: "material",
+          lineNumbers: false,
+          viewportMargin: Infinity,
+        }}
+        onBeforeChange={(_editor, _data, value) => setEditingValue(value)}
+      />
+    </div>
+    <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
+      <Button
+        variant="success"
+        size="sm"
+        onClick={() => saveEdit(index)}
+      >
+        Save
+      </Button>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={cancelEdit}
+      >
+        Cancel
+      </Button>
+    </div>
+  </div>
+) : (
+                    <>
+                      <code>{constraint}</code>
+                      <Button
+                        variant="outline-secondary"
+                        size="sm"
+                        className="ms-2"
+                        onClick={() => startEdit(index, constraint)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outline-danger"
+                        size="sm"
+                        className="ms-2"
+                        onClick={() => removeConstraint(index)}
+                      >
+                        Remove
+                      </Button>
+                    </>
+                  )}
                 </li>
               ))}
             </ul>
