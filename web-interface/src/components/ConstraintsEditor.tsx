@@ -12,7 +12,6 @@ interface ConstraintsEditorProps {
   onChange: (constraints: string[]) => void;
 }
 
-
 const ConstraintsEditor = ({
   model,
   constraints,
@@ -43,12 +42,19 @@ const ConstraintsEditor = ({
     }
     let formattedConstraint = editingValue.trim();
     formattedConstraint = formattedConstraint.replace(/;\s*$/, "");
-    const isValid = model.some((param) => formattedConstraint.includes(`[${param.key}]`));
+    const isValid = model.some((param) =>
+      formattedConstraint.includes(`[${param.key}]`),
+    );
     if (!isValid) {
-      setError("Constraint should reference at least one parameter using [parameter_name] syntax");
+      setError(
+        "Constraint should reference at least one parameter using [parameter_name] syntax",
+      );
       return;
     }
-    if (formattedConstraint.includes("<>") && !formattedConstraint.includes(" <> ")) {
+    if (
+      formattedConstraint.includes("<>") &&
+      !formattedConstraint.includes(" <> ")
+    ) {
       formattedConstraint = formattedConstraint.replace(/<>/g, " <> ");
     }
     // Save
@@ -198,37 +204,45 @@ const ConstraintsEditor = ({
                   className="list-group-item d-flex justify-content-between align-items-center"
                 >
                   {editingIndex === index ? (
-  <div style={{ width: "100%" }}>
-    <div style={{ marginBottom: "10px" }}>
-      <CodeMirror
-        value={editingValue}
-        options={{
-          mode: "javascript",
-          theme: "material",
-          lineNumbers: false,
-          viewportMargin: Infinity,
-        }}
-        onBeforeChange={(_editor, _data, value) => setEditingValue(value)}
-      />
-    </div>
-    <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
-      <Button
-        variant="success"
-        size="sm"
-        onClick={() => saveEdit(index)}
-      >
-        Save
-      </Button>
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={cancelEdit}
-      >
-        Cancel
-      </Button>
-    </div>
-  </div>
-) : (
+                    <div style={{ width: "100%" }}>
+                      <div style={{ marginBottom: "10px" }}>
+                        <CodeMirror
+                          value={editingValue}
+                          options={{
+                            mode: "javascript",
+                            theme: "material",
+                            lineNumbers: false,
+                            viewportMargin: Infinity,
+                          }}
+                          onBeforeChange={(_editor, _data, value) =>
+                            setEditingValue(value)
+                          }
+                        />
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "8px",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <Button
+                          variant="success"
+                          size="sm"
+                          onClick={() => saveEdit(index)}
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={cancelEdit}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
                     <>
                       <code>{constraint}</code>
                       <Button
