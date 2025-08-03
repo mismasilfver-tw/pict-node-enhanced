@@ -42,6 +42,9 @@
   },
   "proxy": "http://localhost:3001",
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^12.1.5",
+    "@testing-library/user-event": "^13.5.0",
     "@types/axios": "^0.9.36",
     "@types/codemirror": "^5.60.16",
     "@types/react": "^17.0.87",
