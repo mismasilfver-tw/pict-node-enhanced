@@ -19,6 +19,8 @@ import ExamplesDropdown from "./components/ExamplesDropdown";
 import ConstraintsEditor from "./components/ConstraintsEditor";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import ConstraintBuilderTest from "./components/constraint-builder/ConstraintBuilderTest";
+
 
 // Define TypeScript interfaces
 interface Parameter {
@@ -59,6 +61,8 @@ const App = () => {
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [scenarioName, setScenarioName] = useState("");
   const [savedScenarios, setSavedScenarios] = useState([] as SavedScenario[]);
+  // Toggle for showing constraint builder test component
+  const [showConstraintBuilderTest, setShowConstraintBuilderTest] = useState(false);
 
   // Fetch examples and load saved scenarios when component mounts
   useEffect(() => {
@@ -257,6 +261,27 @@ const App = () => {
   return (
     <Container className="app-container">
       <Header />
+      
+      <div className="mb-3">
+        <Button 
+          variant={showConstraintBuilderTest ? "outline-primary" : "primary"}
+          onClick={() => setShowConstraintBuilderTest(false)}
+          className="me-2"
+        >
+          Main Interface
+        </Button>
+        <Button 
+          variant={showConstraintBuilderTest ? "primary" : "outline-primary"}
+          onClick={() => setShowConstraintBuilderTest(true)}
+        >
+          Constraint Builder Test
+        </Button>
+      </div>
+      
+      {showConstraintBuilderTest ? (
+        <ConstraintBuilderTest />
+      ) : (
+        <div>
 
       <Row className="mb-3">
         <Col md={6}>
@@ -382,6 +407,8 @@ const App = () => {
       </Row>
 
       <Footer />
+        </div>
+      )}
 
       {/* Confirmation Modal for Clear All Values */}
       <Modal show={showClearModal} onHide={() => setShowClearModal(false)}>
