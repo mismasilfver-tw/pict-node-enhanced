@@ -28,7 +28,7 @@ export interface CallPictOptions {
 function getBinaryPath() {
   const root = IS_PICT_DEV
     ? path.resolve(PICT_DIR_PATH, "..", "..")
-    : path.resolve(PICT_DIR_PATH, "..");
+    : path.resolve(PICT_DIR_PATH, "..", "..");
 
   if (IS_WIN) {
     return path.join(root, "bin", "pict.exe");

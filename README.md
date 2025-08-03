@@ -6,7 +6,7 @@
 
 ## Attribution
 
-This project is based on [pict-node](https://github.com/microsoft/pict-node) and extends it with additional features including:
+This project is based on [pict-node](https://github.com/gmaxlev/pict-node) and extends it with additional features including:
 
 - Enhanced web interface with improved UI/UX
 - Constraint handling improvements and validation
@@ -277,6 +277,10 @@ A lightweight alternative that works directly with the Express server without re
 
 - **Interactive Model Editor**: Add parameters and values with a user-friendly interface
 - **Real-time Test Case Generation**: Generate test cases with a single click
+- **Inline Constraint Editing**: Edit constraints directly with syntax highlighting using CodeMirror 5
+  - Click "Edit" next to any constraint to modify it in-place
+  - Mobile-friendly layout with Save/Cancel buttons below the editor
+  - Real-time validation and error feedback
 - **Example Models**: Load pre-defined examples to get started quickly
 - **Export Options**: Export test cases as JSON or CSV
 - **Responsive Design**: Works on desktop and mobile devices
@@ -488,6 +492,16 @@ The following are potential improvements to the constraints editor UI to make it
    - Clean up test output to make debugging easier and improve test readability
    - Ensure all test error handling follows consistent patterns
 
+### Recently Completed Features
+
+✅ **Inline Constraint Editing** (v1.2.0)
+
+- Added CodeMirror 5 integration for in-place constraint editing
+- Mobile-friendly UI with vertical button layout
+- Real-time syntax validation and error feedback
+- Lazy-loaded editor to optimize bundle size
+- Support for Save/Cancel operations with proper validation
+
 ### Additional Web Interface Features
 
 The following features from the core library are not yet implemented in the web interface:
@@ -526,7 +540,14 @@ The following features from the core library are not yet implemented in the web 
    - Custom command builder for power users
    - Option to view and edit the raw PICT model
 
-7. **Documentation and Help**
+7. **Enhanced Constraint Editor**
+   - Auto-completion for parameter names and values
+   - Dropdown-based constraint builder UI
+   - Syntax highlighting with custom PICT language mode
+   - Constraint templates and snippets
+   - Visual constraint validation with error highlighting
+
+8. **Documentation and Help**
    - Inline help text explaining advanced features
    - Interactive tutorials for new users
    - Examples showing how to use all features effectively
