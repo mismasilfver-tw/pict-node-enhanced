@@ -5,6 +5,9 @@ This is the web interface for the PICT-Node library, allowing you to generate an
 ## Features
 
 - Interactive model editor for defining test parameters and values
+- Visual constraint builder with dropdown-based interface for creating constraints
+- Toggle between text-based and visual constraint editing modes
+- Real-time constraint validation and preview
 - Real-time test case generation
 - Example test models
 - Export test cases as JSON or CSV
@@ -40,10 +43,22 @@ http://localhost:3000
 ## Usage
 
 1. Define your test model by adding parameters and their possible values
-2. Set the combination order (2-way for pairs, 3-way for triplets, etc.)
-3. Click "Generate Test Cases" to create test cases
-4. View the generated test cases in the table
-5. Export the test cases as CSV or JSON if needed
+2. Add constraints using either:
+   - Text Editor mode: Manually type constraints using PICT syntax
+   - Visual Builder mode: Use the dropdown interface to build constraints without typing syntax
+3. Set the combination order (2-way for pairs, 3-way for triplets, etc.)
+4. Click "Generate Test Cases" to create test cases
+5. View the generated test cases in the table
+6. Export the test cases as CSV or JSON if needed
+
+### Using the Visual Constraint Builder
+
+1. Click the "Visual Builder" toggle button in the Constraints section
+2. Select constraint type (IF-THEN or Simple)
+3. Build your constraint using the dropdown selectors for parameters, operators, and values
+4. Review the constraint preview and validation feedback
+5. Click "Add Constraint" to add it to your model
+6. Continue adding multiple constraints without leaving the visual builder
 
 ## Examples
 

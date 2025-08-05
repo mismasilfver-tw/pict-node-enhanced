@@ -17,7 +17,7 @@ describe('ConstraintBuilder', () => {
     mockOnCancel.mockClear();
   });
 
-  test('renders with simple constraint type by default', () => {
+  test('renders with if-then constraint type by default', () => {
     render(
       <ConstraintBuilder
         parameters={mockParameters}
@@ -26,24 +26,27 @@ describe('ConstraintBuilder', () => {
       />
     );
     
-    expect(screen.getByText('Simple Constraint')).toBeInTheDocument();
-    expect(screen.getByText('Condition')).toBeInTheDocument();
-  });
-
-  test('can switch to IF-THEN constraint type', () => {
-    render(
-      <ConstraintBuilder
-        parameters={mockParameters}
-        onAddConstraint={mockOnAddConstraint}
-        onCancel={mockOnCancel}
-      />
-    );
-    
-    // Change to IF-THEN constraint type
-    fireEvent.change(screen.getByRole('combobox', { name: '' }), { target: { value: 'if-then' } });
-    
+    expect(screen.getByText('IF-THEN Constraint')).toBeInTheDocument();
     expect(screen.getByText('IF Condition')).toBeInTheDocument();
     expect(screen.getByText('THEN Condition')).toBeInTheDocument();
+  });
+
+  test('can switch to simple constraint type', () => {
+    render(
+      <ConstraintBuilder
+        parameters={mockParameters}
+        onAddConstraint={mockOnAddConstraint}
+        onCancel={mockOnCancel}
+      />
+    );
+    
+    // Change to simple constraint type
+    fireEvent.change(screen.getByRole('combobox', { name: '' }), { target: { value: 'simple' } });
+    
+    expect(screen.getByText('Condition')).toBeInTheDocument();
+    // IF and THEN conditions should not be present
+    expect(screen.queryByText('IF Condition')).not.toBeInTheDocument();
+    expect(screen.queryByText('THEN Condition')).not.toBeInTheDocument();
   });
 
   test('Add Constraint button is disabled initially', () => {
@@ -83,7 +86,11 @@ describe('ConstraintBuilder', () => {
       />
     );
     
-    // Get all dropdowns
+    // First switch to simple constraint type since if-then is now the default
+    const typeDropdown = screen.getByRole('combobox', { name: '' });
+    fireEvent.change(typeDropdown, { target: { value: 'simple' } });
+    
+    // Get all dropdowns after switching to simple
     const dropdowns = screen.getAllByRole('combobox');
     
     // Select parameter
@@ -114,7 +121,11 @@ describe('ConstraintBuilder', () => {
       />
     );
     
-    // Get all dropdowns
+    // First switch to simple constraint type since if-then is now the default
+    const typeDropdown = screen.getByRole('combobox', { name: '' });
+    fireEvent.change(typeDropdown, { target: { value: 'simple' } });
+    
+    // Get all dropdowns after switching to simple
     const dropdowns = screen.getAllByRole('combobox');
     
     // Select parameter
@@ -148,10 +159,9 @@ describe('ConstraintBuilder', () => {
       />
     );
     
-    // Change to IF-THEN constraint type
-    fireEvent.change(screen.getByRole('combobox', { name: '' }), { target: { value: 'if-then' } });
+    // No need to change to IF-THEN constraint type as it's now the default
     
-    // Get all dropdowns after switching to IF-THEN
+    // Get all dropdowns
     const dropdowns = screen.getAllByRole('combobox');
     
     // Select IF parameter
@@ -191,7 +201,11 @@ describe('ConstraintBuilder', () => {
       />
     );
     
-    // Get all dropdowns
+    // First switch to simple constraint type since if-then is now the default
+    const typeDropdown = screen.getByRole('combobox', { name: '' });
+    fireEvent.change(typeDropdown, { target: { value: 'simple' } });
+    
+    // Get all dropdowns after switching to simple
     const dropdowns = screen.getAllByRole('combobox');
     
     // Select parameter (size - numeric)

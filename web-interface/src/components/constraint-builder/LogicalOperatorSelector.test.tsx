@@ -43,11 +43,11 @@ describe('LogicalOperatorSelector', () => {
       />
     );
     
-    const andButton = screen.getByText('AND');
-    const orButton = screen.getByText('OR');
+    const andButton = screen.getByLabelText('AND');
+    const orButton = screen.getByLabelText('OR');
     
-    expect(andButton).toHaveAttribute('aria-pressed', 'true');
-    expect(orButton).toHaveAttribute('aria-pressed', 'false');
+    expect(andButton).toBeChecked();
+    expect(orButton).not.toBeChecked();
   });
 
   test('OR is selected when selectedOperator is OR', () => {
@@ -59,11 +59,11 @@ describe('LogicalOperatorSelector', () => {
       />
     );
     
-    const andButton = screen.getByText('AND');
-    const orButton = screen.getByText('OR');
+    const andButton = screen.getByLabelText('AND');
+    const orButton = screen.getByLabelText('OR');
     
-    expect(andButton).toHaveAttribute('aria-pressed', 'false');
-    expect(orButton).toHaveAttribute('aria-pressed', 'true');
+    expect(andButton).not.toBeChecked();
+    expect(orButton).toBeChecked();
   });
 
   test('clicking on OR calls onChange with OR', () => {
@@ -106,8 +106,8 @@ describe('LogicalOperatorSelector', () => {
       />
     );
     
-    const andButton = screen.getByText('AND');
-    const orButton = screen.getByText('OR');
+    const andButton = screen.getByLabelText('AND');
+    const orButton = screen.getByLabelText('OR');
     
     expect(andButton).toBeDisabled();
     expect(orButton).toBeDisabled();

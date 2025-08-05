@@ -70,7 +70,9 @@ const ValueDropdown = ({
     <div className="value-dropdown">
       {label && <Form.Label>{label}</Form.Label>}
       <Form.Select
-        value={isMultiSelect ? undefined : (selectedValues[0] !== undefined ? String(selectedValues[0]) : '')}
+        value={isMultiSelect 
+          ? selectedValues.map(val => formatValue(val)) 
+          : (selectedValues[0] !== undefined ? String(selectedValues[0]) : '')}
         onChange={isMultiSelect ? handleMultiValueChange : handleSingleValueChange}
         disabled={disabled || !parameter}
         aria-label="Value selection"
@@ -86,7 +88,6 @@ const ValueDropdown = ({
           <option 
             key={index} 
             value={formatValue(value)}
-            selected={isMultiSelect && selectedValues.includes(value)}
           >
             {isNumeric ? value : `"${value}"`}
           </option>
