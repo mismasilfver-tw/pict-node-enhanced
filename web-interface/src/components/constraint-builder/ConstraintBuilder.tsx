@@ -108,6 +108,31 @@ const ConstraintBuilder = ({
   const handleAddConstraint = () => {
     if (isValid && constraintPreview) {
       onAddConstraint(constraintPreview);
+      
+      // Reset form fields after adding a constraint to prepare for the next one
+      if (constraintType === 'simple') {
+        setSimpleCondition({
+          parameterKey: null,
+          operator: null,
+          values: []
+        } as Condition);
+      } else {
+        setIfCondition({
+          parameterKey: null,
+          operator: null,
+          values: []
+        } as Condition);
+        setThenCondition({
+          parameterKey: null,
+          operator: null,
+          values: []
+        } as Condition);
+      }
+      
+      // Clear the preview
+      setConstraintPreview('');
+      setIsValid(false);
+      setValidationMessage('');
     }
   };
 

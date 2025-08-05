@@ -130,8 +130,8 @@ const ConstraintsEditor = ({
   const handleAddVisualConstraint = (constraintText: string) => {
     setError("");
     onChange([...constraints, constraintText]);
-    // Switch back to text mode after adding a constraint
-    setEditorMode("text");
+    // Stay in visual builder mode after adding a constraint
+    // This allows users to add multiple constraints without switching modes
   };
 
   const removeConstraint = (index: number) => {
