@@ -14,6 +14,7 @@ describe('LogicalOperatorSelector', () => {
       <LogicalOperatorSelector
         selectedOperator="AND"
         onChange={mockOnChange}
+        label="Logical Operator"
       />
     );
     
@@ -38,6 +39,7 @@ describe('LogicalOperatorSelector', () => {
       <LogicalOperatorSelector
         selectedOperator="AND"
         onChange={mockOnChange}
+        label="Logical Operator"
       />
     );
     
@@ -53,6 +55,7 @@ describe('LogicalOperatorSelector', () => {
       <LogicalOperatorSelector
         selectedOperator="OR"
         onChange={mockOnChange}
+        label="Logical Operator"
       />
     );
     
@@ -68,6 +71,7 @@ describe('LogicalOperatorSelector', () => {
       <LogicalOperatorSelector
         selectedOperator="AND"
         onChange={mockOnChange}
+        label="Logical Operator"
       />
     );
     
@@ -82,6 +86,7 @@ describe('LogicalOperatorSelector', () => {
       <LogicalOperatorSelector
         selectedOperator="OR"
         onChange={mockOnChange}
+        label="Logical Operator"
       />
     );
     
@@ -97,6 +102,7 @@ describe('LogicalOperatorSelector', () => {
         selectedOperator="AND"
         onChange={mockOnChange}
         disabled={true}
+        label="Logical Operator"
       />
     );
     
@@ -112,6 +118,7 @@ describe('LogicalOperatorSelector', () => {
       <LogicalOperatorSelector
         selectedOperator="AND"
         onChange={mockOnChange}
+        label="Logical Operator"
       />
     );
     
@@ -124,6 +131,7 @@ describe('LogicalOperatorSelector', () => {
       <LogicalOperatorSelector
         selectedOperator="OR"
         onChange={mockOnChange}
+        label="Logical Operator"
       />
     );
     
