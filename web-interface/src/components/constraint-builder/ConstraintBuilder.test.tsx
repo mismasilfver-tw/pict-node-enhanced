@@ -209,7 +209,8 @@ describe('ConstraintBuilder', () => {
     });
     
     // Check that the preview shows the numeric value without quotes
-    const previewElement = screen.getByText(/Constraint Preview/).parentElement;
-    expect(previewElement).toHaveTextContent('[size] > 1000;');
+    // Using getByText instead of direct DOM access
+    const previewText = screen.getByText(/\[size\] > 1000;/);
+    expect(previewText).toBeInTheDocument();
   });
 });

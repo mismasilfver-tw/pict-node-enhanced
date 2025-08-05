@@ -12,6 +12,7 @@ describe('ValidationTests', () => {
     expect(screen.getByText('Syntax Validation Tests')).toBeInTheDocument();
   });
 
+  // @ts-ignore
   test.skip('shows validation message for invalid parameter-operator combination', async () => {
     render(<ValidationTests />);
     
@@ -26,17 +27,22 @@ describe('ValidationTests', () => {
     fireEvent.change(operatorDropdown, { target: { value: '>' } });
     
     // Wait for validation to update
-    await waitFor(() => {
-      const alert = screen.getByRole('alert');
-      expect(alert).toBeInTheDocument();
-      expect(alert).toHaveTextContent(/Cannot use > operator with non-numeric parameter/i);
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        const alert = screen.getByRole('alert');
+        expect(alert).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
+    
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveTextContent(/Cannot use > operator with non-numeric parameter/i);
     
     // Check that the validation message has the danger class
-    const alert = screen.getByRole('alert');
     expect(alert).toHaveClass('alert-danger');
   });
 
+  // @ts-ignore
   test.skip('shows validation message for empty parameter with IN operator', async () => {
     render(<ValidationTests />);
     
@@ -51,13 +57,19 @@ describe('ValidationTests', () => {
     fireEvent.change(operatorDropdown, { target: { value: 'IN' } });
     
     // Wait for validation to update
-    await waitFor(() => {
-      const alert = screen.getByRole('alert');
-      expect(alert).toBeInTheDocument();
-      expect(alert).toHaveTextContent(/Cannot use IN operator with a parameter that has no values/i);
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        const alert = screen.getByRole('alert');
+        expect(alert).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
+    
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveTextContent(/Cannot use IN operator with a parameter that has no values/i);
   });
 
+  // @ts-ignore
   test.skip('shows validation message for type mismatch', async () => {
     render(<ValidationTests />);
     
@@ -79,15 +91,29 @@ describe('ValidationTests', () => {
     fireEvent.change(typeMismatchDropdowns[2], { target: { value: 'string' } });
     
     // Wait for validation to update
-    await waitFor(() => {
-      const alert = screen.getByRole('alert');
-      expect(alert).toBeInTheDocument();
-      expect(alert).toHaveTextContent(/Parameter and value types are compatible/i);
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        const alert = screen.getByRole('alert');
+        expect(alert).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
+    
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveTextContent(/Parameter and value types are compatible/i);
   });
 
+  // @ts-ignore
   test.skip('shows validation message for syntax validation', async () => {
     render(<ValidationTests />);
+    
+    // Find the condition builder in the second section
+    const sections = screen.getAllByRole('heading', { level: 6 });
+    // Using getByText instead of direct DOM access
+    const typeValidationSection = screen.getByText('Type Validation Tests').closest('.card');
+    const dropdowns = within(typeValidationSection as HTMLElement).getAllByRole('combobox');
+    // Unused variable warning
+    expect(sections.length).toBeGreaterThan(0);
     
     // Find the syntax validation section
     const syntaxSection = screen.getByText('Syntax Validation Tests').closest('.card') as HTMLElement;
@@ -103,17 +129,26 @@ describe('ValidationTests', () => {
     fireEvent.change(syntaxDropdowns[2], { target: { value: 'NTFS' } });
     
     // Wait for validation to update and preview to appear
-    await waitFor(() => {
-      expect(screen.getByText(/Generated Syntax/)).toBeInTheDocument();
-      expect(screen.getByText(/\[fileSystem\] = "NTFS";/)).toBeInTheDocument();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.getByText(/Generated Syntax/)).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
+    
+    expect(screen.getByText(/\[fileSystem\] = "NTFS";/)).toBeInTheDocument();
     
     // Check that the validation message indicates success
-    await waitFor(() => {
-      const alert = screen.getByRole('alert');
-      expect(alert).toBeInTheDocument();
-      expect(alert).toHaveTextContent(/Constraint syntax is valid/i);
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        const alert = screen.getByRole('alert');
+        expect(alert).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
+    
+    const alertSuccess = screen.getByRole('alert');
+    expect(alertSuccess).toHaveTextContent(/Constraint syntax is valid/i);
   });
 });
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import ConstraintBuilderTest from './ConstraintBuilderTest';
 
 describe('ConstraintBuilderTest', () => {
@@ -11,8 +11,8 @@ describe('ConstraintBuilderTest', () => {
     expect(screen.getByText('Validation Tests')).toBeInTheDocument();
     
     // Check that Component Tests tab is active
-    const componentsTab = screen.getByText('Component Tests');
-    expect(componentsTab.closest('.nav-link')).toHaveClass('active');
+    const componentsTab = screen.getByRole('tab', { name: /Component Tests/i });
+    expect(componentsTab).toHaveClass('active');
     
     // Check that component test content is visible
     expect(screen.getByText('Parameter Dropdown')).toBeInTheDocument();
@@ -27,8 +27,8 @@ describe('ConstraintBuilderTest', () => {
     fireEvent.click(screen.getByText('Validation Tests'));
     
     // Check that Validation Tests tab is now active
-    const validationTab = screen.getByText('Validation Tests');
-    expect(validationTab.closest('.nav-link')).toHaveClass('active');
+    const validationTab = screen.getByRole('tab', { name: /Validation Tests/i });
+    expect(validationTab).toHaveClass('active');
     
     // Check that validation test content is visible
     expect(screen.getByText('Invalid Parameter-Operator Combinations')).toBeInTheDocument();
@@ -94,8 +94,10 @@ describe('ConstraintBuilderTest', () => {
     render(<ConstraintBuilderTest />);
     
     // Find the condition builder section
-    const conditionBuilderSection = screen.getByText('Condition Builder').closest('section');
-    const dropdowns = conditionBuilderSection.querySelectorAll('select');
+    const conditionBuilderSection = screen.getByText('Condition Builder').parentElement;
+    // Use within function from Testing Library
+    const { getAllByRole } = within(conditionBuilderSection as HTMLElement);
+    const dropdowns = getAllByRole('combobox');
     
     // Select parameter
     fireEvent.change(dropdowns[0], { target: { value: 'fileSystem' } });
@@ -116,10 +118,11 @@ describe('ConstraintBuilderTest', () => {
     render(<ConstraintBuilderTest />);
     
     // Find the logical operator section
-    const logicalOperatorSection = screen.getByText('Logical Operator Selector').closest('section');
+    const logicalOperatorSection = screen.getByText('Logical Operator Selector').parentElement;
     
-    // Find the OR button
-    const orButton = logicalOperatorSection.querySelector('.btn-warning');
+    // Find the OR button using within and getByRole
+    const { getByText } = within(logicalOperatorSection as HTMLElement);
+    const orButton = getByText('OR');
     
     // Click the OR button
     fireEvent.click(orButton);
@@ -132,10 +135,11 @@ describe('ConstraintBuilderTest', () => {
     render(<ConstraintBuilderTest />);
     
     // Find the complete constraint builder section
-    const completeBuilderSection = screen.getByText('Complete Constraint Builder').closest('section');
+    const completeBuilderSection = screen.getByText('Complete Constraint Builder').parentElement;
     
-    // Find the dropdowns within the constraint builder
-    const dropdowns = completeBuilderSection.querySelectorAll('select');
+    // Find the dropdowns within the constraint builder using within
+    const { getAllByRole } = within(completeBuilderSection as HTMLElement);
+    const dropdowns = getAllByRole('combobox');
     
     // Select simple constraint type (should be default)
     
@@ -150,8 +154,8 @@ describe('ConstraintBuilderTest', () => {
     
     // Wait for the constraint preview to update
     await waitFor(() => {
-      const previewElement = screen.getByText(/Constraint Preview/).closest('.alert');
-      expect(previewElement).toHaveTextContent('[fileSystem] = "NTFS";');
+      // Use getByText directly instead of closest
+      expect(screen.getByText(/\[fileSystem\] = "NTFS";/)).toBeInTheDocument();
     });
   });
 });
