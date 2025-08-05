@@ -27,6 +27,7 @@ describe('ValueDropdown', () => {
         selectedOperator={'='}
         selectedValues={[]}
         onChange={mockOnChange}
+        label="Value"
       />
     );
     
@@ -41,6 +42,7 @@ describe('ValueDropdown', () => {
         selectedValues={[]}
         onChange={mockOnChange}
         placeholder="Custom value placeholder"
+        label="Value"
       />
     );
     
@@ -68,6 +70,7 @@ describe('ValueDropdown', () => {
         selectedOperator={'='}
         selectedValues={[]}
         onChange={mockOnChange}
+        label="Value"
       />
     );
     
@@ -83,6 +86,7 @@ describe('ValueDropdown', () => {
         selectedOperator={'='}
         selectedValues={[]}
         onChange={mockOnChange}
+        label="Value"
       />
     );
     
@@ -98,6 +102,7 @@ describe('ValueDropdown', () => {
         selectedOperator={'IN'}
         selectedValues={[]}
         onChange={mockOnChange}
+        label="Value"
       />
     );
     
@@ -113,6 +118,7 @@ describe('ValueDropdown', () => {
         selectedOperator={'='}
         selectedValues={[]}
         onChange={mockOnChange}
+        label="Value"
       />
     );
     
@@ -128,6 +134,7 @@ describe('ValueDropdown', () => {
         selectedOperator={'='}
         selectedValues={[]}
         onChange={mockOnChange}
+        label="Value"
       />
     );
     
@@ -142,6 +149,7 @@ describe('ValueDropdown', () => {
         selectedOperator={'='}
         selectedValues={[]}
         onChange={mockOnChange}
+        label="Value"
       />
     );
     
@@ -156,6 +164,7 @@ describe('ValueDropdown', () => {
         selectedOperator={'='}
         selectedValues={['NTFS']}
         onChange={mockOnChange}
+        label="Value"
       />
     );
     
@@ -171,6 +180,7 @@ describe('ValueDropdown', () => {
         selectedValues={[]}
         onChange={mockOnChange}
         disabled={true}
+        label="Value"
       />
     );
     
@@ -184,6 +194,7 @@ describe('ValueDropdown', () => {
         selectedOperator={'='}
         selectedValues={[]}
         onChange={mockOnChange}
+        label="Value"
       />
     );
     

@@ -15,6 +15,7 @@ describe('OperatorDropdown', () => {
         selectedOperator={null}
         onChange={mockOnChange}
         isNumeric={false}
+        label="Operator"
       />
     );
     
@@ -28,6 +29,7 @@ describe('OperatorDropdown', () => {
         onChange={mockOnChange}
         isNumeric={false}
         placeholder="Custom operator placeholder"
+        label="Operator"
       />
     );
     
@@ -53,6 +55,7 @@ describe('OperatorDropdown', () => {
         selectedOperator={null}
         onChange={mockOnChange}
         isNumeric={false}
+        label="Operator"
       />
     );
     
@@ -73,6 +76,7 @@ describe('OperatorDropdown', () => {
         selectedOperator={null}
         onChange={mockOnChange}
         isNumeric={true}
+        label="Operator"
       />
     );
     
@@ -94,6 +98,7 @@ describe('OperatorDropdown', () => {
         selectedOperator={null}
         onChange={mockOnChange}
         isNumeric={true}
+        label="Operator"
       />
     );
     
@@ -107,6 +112,7 @@ describe('OperatorDropdown', () => {
         selectedOperator={'='}
         onChange={mockOnChange}
         isNumeric={false}
+        label="Operator"
       />
     );
     
@@ -121,6 +127,7 @@ describe('OperatorDropdown', () => {
         onChange={mockOnChange}
         isNumeric={false}
         disabled={true}
+        label="Operator"
       />
     );
     
