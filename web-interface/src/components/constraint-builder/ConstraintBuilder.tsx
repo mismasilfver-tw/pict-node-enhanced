@@ -44,7 +44,7 @@ const ConstraintBuilder = ({
   } as Condition);
 
   // State for constraint type
-  const [constraintType, setConstraintType] = useState('simple' as 'simple' | 'if-then');
+  const [constraintType, setConstraintType] = useState('if-then' as 'simple' | 'if-then');
   
   // State for logical operator (for future multi-condition support)
   const [logicalOperator, setLogicalOperator] = useState('AND' as LogicalOperator);
@@ -121,8 +121,8 @@ const ConstraintBuilder = ({
             value={constraintType}
             onChange={(e) => setConstraintType(e.target.value as 'simple' | 'if-then')}
           >
-            <option value="simple">Simple Constraint</option>
             <option value="if-then">IF-THEN Constraint</option>
+            <option value="simple">Simple Constraint</option>
           </Form.Select>
         </div>
       </Card.Header>

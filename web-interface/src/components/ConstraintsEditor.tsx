@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Form, Button, Card, Alert } from "react-bootstrap";
+import { Form, Button, Card, Alert, ButtonGroup, ToggleButton } from "react-bootstrap";
+import ConstraintBuilder from "./constraint-builder/ConstraintBuilder";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/material.css";
 import "codemirror/mode/javascript/javascript";
@@ -21,6 +22,8 @@ const ConstraintsEditor = ({
   const [error, setError] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
   const [editingValue, setEditingValue] = useState("");
+  // Add state for toggling between text and visual builder
+  const [editorMode, setEditorMode] = useState("text"); // "text" or "visual"
 
   const startEdit = (index: number, value: string) => {
     setEditingIndex(index);
@@ -123,6 +126,14 @@ const ConstraintsEditor = ({
     setNewConstraint("");
   };
 
+  // Handler for adding constraint from the visual builder
+  const handleAddVisualConstraint = (constraintText: string) => {
+    setError("");
+    onChange([...constraints, constraintText]);
+    // Switch back to text mode after adding a constraint
+    setEditorMode("text");
+  };
+
   const removeConstraint = (index: number) => {
     const updatedConstraints = [...constraints];
     updatedConstraints.splice(index, 1);
@@ -152,47 +163,83 @@ const ConstraintsEditor = ({
 
   return (
     <Card className="mb-4">
-      <Card.Header>Constraints</Card.Header>
+      <Card.Header className="d-flex justify-content-between align-items-center">
+        <span>Constraints</span>
+        <ButtonGroup>
+          <ToggleButton
+            id="editor-mode-text"
+            type="radio"
+            variant="outline-primary"
+            name="editor-mode"
+            value="text"
+            checked={editorMode === "text"}
+            onChange={(e) => setEditorMode(e.currentTarget.value)}
+          >
+            Text Editor
+          </ToggleButton>
+          <ToggleButton
+            id="editor-mode-visual"
+            type="radio"
+            variant="outline-primary"
+            name="editor-mode"
+            value="visual"
+            checked={editorMode === "visual"}
+            onChange={(e) => setEditorMode(e.currentTarget.value)}
+          >
+            Visual Builder
+          </ToggleButton>
+        </ButtonGroup>
+      </Card.Header>
       <Card.Body>
-        <p className="text-muted">
-          Constraints allow you to define rules that restrict certain
-          combinations. Use syntax like: IF [parameter1] = "value1" THEN
-          [parameter2] &lt;&gt; "value2";
-        </p>
-        <Alert variant="info">
-          <strong>Important:</strong> When comparing numeric values, do NOT use
-          quotes. Example: <br />
-          <code>IF [fileSystem] = "FAT" THEN [size] &lt;&gt; 10000</code>{" "}
-          (correct) <br />
-          <code>IF [fileSystem] = "FAT" THEN [size] &lt;&gt; "10000"</code>{" "}
-          (incorrect)
-        </Alert>
+        {editorMode === "text" ? (
+          <>
+            <p className="text-muted">
+              Constraints allow you to define rules that restrict certain
+              combinations. Use syntax like: IF [parameter1] = "value1" THEN
+              [parameter2] &lt;&gt; "value2";
+            </p>
+            <Alert variant="info">
+              <strong>Important:</strong> When comparing numeric values, do NOT use
+              quotes. Example: <br />
+              <code>IF [fileSystem] = "FAT" THEN [size] &lt;&gt; 10000</code>{" "}
+              (correct) <br />
+              <code>IF [fileSystem] = "FAT" THEN [size] &lt;&gt; "10000"</code>{" "}
+              (incorrect)
+            </Alert>
 
-        {error && <Alert variant="danger">{error}</Alert>}
+            {error && <Alert variant="danger">{error}</Alert>}
 
-        <Form.Group className="mb-3">
-          <Form.Label>Add Constraint</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            value={newConstraint}
-            onChange={(e) => setNewConstraint(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={generateHint()}
+            <Form.Group className="mb-3">
+              <Form.Label>Add Constraint</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                value={newConstraint}
+                onChange={(e) => setNewConstraint(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={generateHint()}
+              />
+              <Form.Text className="text-muted">
+                Press Enter to add or use the Add button. Use [parameter_name] to
+                reference parameters.
+              </Form.Text>
+            </Form.Group>
+
+            <Button
+              variant="outline-primary"
+              onClick={addConstraint}
+              className="mb-3"
+            >
+              Add Constraint
+            </Button>
+          </>
+        ) : (
+          <ConstraintBuilder
+            parameters={model}
+            onAddConstraint={handleAddVisualConstraint}
+            onCancel={() => setEditorMode("text")}
           />
-          <Form.Text className="text-muted">
-            Press Enter to add or use the Add button. Use [parameter_name] to
-            reference parameters.
-          </Form.Text>
-        </Form.Group>
-
-        <Button
-          variant="outline-primary"
-          onClick={addConstraint}
-          className="mb-3"
-        >
-          Add Constraint
-        </Button>
+        )}
 
         {constraints.length > 0 && (
           <div className="mt-3">
@@ -245,22 +292,24 @@ const ConstraintsEditor = ({
                   ) : (
                     <>
                       <code>{constraint}</code>
-                      <Button
-                        variant="outline-secondary"
-                        size="sm"
-                        className="ms-2"
-                        onClick={() => startEdit(index, constraint)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant="outline-danger"
-                        size="sm"
-                        className="ms-2"
-                        onClick={() => removeConstraint(index)}
-                      >
-                        Remove
-                      </Button>
+                      <div>
+                        <Button
+                          variant="outline-secondary"
+                          size="sm"
+                          className="ms-2"
+                          onClick={() => startEdit(index, constraint)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          className="ms-2"
+                          onClick={() => removeConstraint(index)}
+                        >
+                          Remove
+                        </Button>
+                      </div>
                     </>
                   )}
                 </li>
@@ -269,43 +318,45 @@ const ConstraintsEditor = ({
           </div>
         )}
 
-        <div className="mt-4">
-          <h6>Constraint Syntax Help:</h6>
-          <ul className="text-muted">
-            <li>
-              <code>IF [param] = "value" THEN [param2] = "value2";</code> -
-              If-Then condition with string values
-            </li>
-            <li>
-              <code>[param] &lt;&gt; "value";</code> - Parameter cannot equal
-              string value
-            </li>
-            <li>
-              <code>[param] &lt;&gt; 100;</code> - Parameter cannot equal
-              numeric value (no quotes)
-            </li>
-            <li>
-              <code>[param] IN &#123;"value1", "value2"&#125;;</code> -
-              Parameter must be one of the string values
-            </li>
-            <li>
-              <code>[param] IN &#123;1, 2, 3&#125;;</code> - Parameter must be
-              one of the numeric values (no quotes)
-            </li>
-            <li>
-              <code>[param1] = "value1" AND [param2] = "value2";</code> -
-              Logical AND
-            </li>
-            <li>
-              <code>[param1] = "value1" OR [param2] = "value2";</code> - Logical
-              OR
-            </li>
-            <li>
-              <code>IF [param] &gt; 5 THEN [param2] &lt; 10;</code> - Numeric
-              comparisons (no quotes)
-            </li>
-          </ul>
-        </div>
+        {editorMode === "text" && (
+          <div className="mt-4">
+            <h6>Constraint Syntax Help:</h6>
+            <ul className="text-muted">
+              <li>
+                <code>IF [param] = "value" THEN [param2] = "value2";</code> -
+                If-Then condition with string values
+              </li>
+              <li>
+                <code>[param] &lt;&gt; "value";</code> - Parameter cannot equal
+                string value
+              </li>
+              <li>
+                <code>[param] &lt;&gt; 100;</code> - Parameter cannot equal
+                numeric value (no quotes)
+              </li>
+              <li>
+                <code>[param] IN &#123;"value1", "value2"&#125;;</code> -
+                Parameter must be one of the string values
+              </li>
+              <li>
+                <code>[param] IN &#123;1, 2, 3&#125;;</code> - Parameter must be
+                one of the numeric values (no quotes)
+              </li>
+              <li>
+                <code>[param1] = "value1" AND [param2] = "value2";</code> -
+                Logical AND
+              </li>
+              <li>
+                <code>[param1] = "value1" OR [param2] = "value2";</code> - Logical
+                OR
+              </li>
+              <li>
+                <code>IF [param] &gt; 5 THEN [param2] &lt; 10;</code> - Numeric
+                comparisons (no quotes)
+              </li>
+            </ul>
+          </div>
+        )}
       </Card.Body>
     </Card>
   );
