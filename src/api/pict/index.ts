@@ -7,6 +7,7 @@ import {
   InputSubModel,
   RandomOption,
   PictNodeStatistics,
+  EnhancedPictNodeStatistics,
 } from "../../common/types";
 import type { PictTypedModel } from "./types";
 import { callPict, CallPictOptions } from "../../common/pict";
@@ -14,7 +15,7 @@ import { isPositiveNumber } from "../../common/utils";
 import { createModel } from "./model";
 import { createSeed } from "./seed";
 import { parseResult } from "./parse";
-import { parseStatistics } from "../../common/statistics";
+import { parseStatistics, parseEnhancedStatistics } from "../../common/statistics";
 import { performance } from "perf_hooks";
 
 interface PictOptions {
@@ -30,7 +31,7 @@ type Pict = {
   stats: <M extends readonly PictTypedModel[]>(
     model: { model: M; sub?: readonly InputSubModel<M>[]; seed?: InputSeed<M> },
     options?: PictOptions,
-  ) => Promise<PictNodeStatistics>;
+  ) => Promise<EnhancedPictNodeStatistics>;
 };
 
 export function prepare<M extends ReadonlyArray<PictTypedModel>>(
@@ -120,19 +121,27 @@ pict.stats = async function stats<M extends ReadonlyArray<PictTypedModel>>(
     seed?: InputSeed<M>;
   },
   options?: PictOptions,
-) {
+): Promise<EnhancedPictNodeStatistics> {
   try {
     const start = performance.now();
 
     const { callPictOptions, valuesIdMap } = prepare(model, options);
 
+    // Set statistics option to true to get statistics from PICT
     callPictOptions.options.statistics = true;
+    
+    // Get the order from options or use default
+    const order = options?.order || Math.min(2, model.model.length);
+    
+    // Get the parameter count from the model
+    const parameterCount = model.model.length;
 
     const result = await callPict(callPictOptions);
 
     const end = performance.now() - start;
 
-    return parseStatistics(result, end);
+    // Return enhanced statistics with order and parameter count
+    return parseEnhancedStatistics(result, end, order, parameterCount);
   } catch (error) {
     console.error('Error while calling "pict.stats" function.');
     throw error;

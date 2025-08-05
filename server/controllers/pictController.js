@@ -1,4 +1,5 @@
 const { pict, strings } = require("../../lib/index");
+const { createEnhancedStatistics } = require("../utils/statisticsCalculations");
 const path = require("path");
 const fs = require("fs");
 
@@ -19,6 +20,7 @@ const generateTestCases = async (req, res) => {
 
     // If constraints are provided, use the strings API which supports constraints
     let cases;
+    let statistics = null;
     if (constraints && constraints.length > 0) {
       try {
         // First, convert the model to use only string values as required by the strings API
@@ -84,6 +86,20 @@ const generateTestCases = async (req, res) => {
           },
           options || {},
         );
+        
+        // Try to get statistics
+        try {
+          statistics = await strings.stats(
+            {
+              model: stringModel,
+              constraints: formattedConstraints,
+            },
+            options || {},
+          );
+        } catch (statsError) {
+          console.error("Error generating statistics:", statsError);
+          // Continue without statistics if they fail
+        }
       } catch (error) {
         console.error("Error processing constraints:", error);
         throw error;
@@ -91,12 +107,27 @@ const generateTestCases = async (req, res) => {
     } else {
       // Use the standard pict API if no constraints
       cases = await pict({ model }, options || {});
+      
+      // Try to get statistics
+      try {
+        statistics = await pict.stats({ model }, options || {});
+      } catch (statsError) {
+        console.error("Error generating statistics:", statsError);
+        // Continue without statistics if they fail
+      }
+    }
+
+    // Create enhanced statistics with additional metrics if statistics were generated
+    if (statistics) {
+      const orderValue = options && typeof options.order === 'number' ? options.order : 2;
+      statistics = createEnhancedStatistics(statistics, model, { order: orderValue });
     }
 
     return res.json({
       success: true,
       cases,
       count: cases.length,
+      statistics,
     });
   } catch (error) {
     console.error("Error generating test cases:", error);

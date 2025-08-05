@@ -972,6 +972,12 @@ describe("strings()", () => {
         combinations: 27,
         generatedTests: 27,
         generationTime: expect.any(String),
+        // Enhanced statistics fields
+        order: 3,
+        theoreticalMax: 1,
+        coveragePercentage: 100,
+        efficiency: 27,
+        constraintReduction: 0
       });
     });
   });

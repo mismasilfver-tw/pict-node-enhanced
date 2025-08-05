@@ -1,5 +1,6 @@
 import { EOL } from "os";
-import type { PictNodeStatistics } from "./types";
+import type { PictNodeStatistics, EnhancedPictNodeStatistics } from "./types";
+import { enhanceStatistics } from "./enhancedStatistics";
 
 /**
  * Parsing and formatting native PICT statistics to JS object
@@ -49,7 +50,7 @@ function parseParameter(raw: string) {
 /**
  * Receives raw PICT's statistics output and return normalized statistics
  */
-export function parseStatistics(raw: string, generationTimeNodeJs: number) {
+export function parseStatistics(raw: string, generationTimeNodeJs: number): PictNodeStatistics {
   return raw
     .split(EOL)
     .filter(Boolean)
@@ -60,4 +61,24 @@ export function parseStatistics(raw: string, generationTimeNodeJs: number) {
       },
       { generationTimeNodeJs },
     ) as PictNodeStatistics;
+}
+
+/**
+ * Enhances the basic statistics with additional calculated metrics
+ * @param baseStats The base statistics from PICT
+ * @param order The order value used for test generation
+ * @param parameterCount The number of parameters in the model
+ * @returns Enhanced statistics with additional metrics
+ */
+export function parseEnhancedStatistics(
+  raw: string, 
+  generationTimeNodeJs: number, 
+  order: number,
+  parameterCount: number
+): EnhancedPictNodeStatistics {
+  // First parse the base statistics
+  const baseStats = parseStatistics(raw, generationTimeNodeJs);
+  
+  // Then enhance them with additional metrics
+  return enhanceStatistics(baseStats, order, parameterCount);
 }

@@ -9,6 +9,7 @@ import {
   InputSeed,
   InputSubModel,
   PictNodeStatistics,
+  EnhancedPictNodeStatistics,
 } from "../../common/types";
 import { callPict, CallPictOptions } from "../../common/pict";
 import { isPositiveNumber } from "../../common/utils";
@@ -17,7 +18,7 @@ import { createSeed } from "./seed";
 import { parseResult } from "./parse";
 import { PictStringModel, InputConstraints, isInputConstraints } from "./types";
 import { performance } from "perf_hooks";
-import { parseStatistics } from "../../common/statistics";
+import { parseStatistics, parseEnhancedStatistics } from "../../common/statistics";
 
 export interface StringsOptions {
   order?: number;
@@ -46,7 +47,7 @@ type Strings = {
       constraints?: InputConstraints;
     },
     options?: StringsOptions,
-  ) => Promise<PictNodeStatistics>;
+  ) => Promise<EnhancedPictNodeStatistics>;
 };
 
 function prepare<M extends ReadonlyArray<PictStringModel>>(
@@ -174,14 +175,23 @@ strings.stats = async function strings<
     constraints?: InputConstraints;
   },
   options?: StringsOptions,
-) {
+): Promise<EnhancedPictNodeStatistics> {
   const start = performance.now();
 
   const callPictOptions = prepare(model, options);
+  
+  // Set statistics option to true to get statistics from PICT
   callPictOptions.options.statistics = true;
+  
+  // Get the order from options or use default
+  const order = options?.order || Math.min(2, model.model.length);
+  
+  // Get the parameter count from the model
+  const parameterCount = model.model.length;
 
   const result = await callPict(callPictOptions);
   const end = performance.now() - start;
 
-  return parseStatistics(result, end);
+  // Return enhanced statistics with order and parameter count
+  return parseEnhancedStatistics(result, end, order, parameterCount);
 };

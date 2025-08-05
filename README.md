@@ -9,6 +9,7 @@
 This project is based on [pict-node](https://github.com/gmaxlev/pict-node) and extends it with additional features including:
 
 - Enhanced web interface with improved UI/UX
+- Visual constraint builder with dropdown-based interface for easy constraint creation
 - Constraint handling improvements and validation
 - Saved scenarios functionality with localStorage persistence
 - Clear all values functionality
