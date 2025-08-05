@@ -786,6 +786,12 @@ describe("pict()", () => {
         combinations: 9,
         generatedTests: 9,
         generationTime: expect.any(String),
+        // Enhanced statistics fields
+        order: 2,
+        theoreticalMax: 1,
+        coveragePercentage: 100,
+        efficiency: 9,
+        constraintReduction: 0
       });
     });
   });
