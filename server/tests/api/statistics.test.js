@@ -6,55 +6,56 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const routes = require('../../routes');
 
-// Mock the pict and strings functions since we can't actually run PICT in tests
-jest.mock('../../../lib/index', () => ({
-  pict: jest.fn().mockResolvedValue([
-    { param1: 'value1', param2: 'value1' },
-    { param1: 'value1', param2: 'value2' },
-    { param1: 'value2', param2: 'value1' },
-    { param1: 'value2', param2: 'value2' }
-  ]),
-  strings: jest.fn().mockResolvedValue([
-    { param1: 'value1', param2: 'value1' },
-    { param1: 'value1', param2: 'value2' },
-    { param1: 'value2', param2: 'value1' },
-    { param1: 'value2', param2: 'value2' }
-  ])
-}));
-
-// Mock the statistics functions
+// Mock the pict and strings modules properly for integration tests
 jest.mock('../../../lib/index', () => {
-  const original = jest.requireActual('../../../lib/index');
+  // Create mock implementations with stats methods
+  const mockPict = jest.fn().mockImplementation(() => {
+    return {
+      testCases: [
+        { param1: 'value1', param2: 'value1' },
+        { param1: 'value1', param2: 'value2' },
+        { param1: 'value2', param2: 'value1' },
+        { param1: 'value2', param2: 'value2' }
+      ],
+      count: 4
+    };
+  });
+  
+  mockPict.stats = jest.fn().mockImplementation(() => {
+    return {
+      combinations: 4,
+      generatedTests: 4,
+      generationTime: 0.01,
+      generationTimeNodeJs: 0.05
+    };
+  });
+  
+  // For strings, create a function that can be called directly
+  // and also has a stats method
+  const mockStringsFunction = jest.fn().mockImplementation(() => {
+    return {
+      testCases: [
+        { param1: 'value1', param2: 'value1' },
+        { param1: 'value1', param2: 'value2' },
+        { param1: 'value2', param2: 'value1' },
+        { param1: 'value2', param2: 'value2' }
+      ],
+      count: 4
+    };
+  });
+  
+  mockStringsFunction.stats = jest.fn().mockImplementation(() => {
+    return {
+      combinations: 4,
+      generatedTests: 4,
+      generationTime: 0.01,
+      generationTimeNodeJs: 0.05
+    };
+  });
+  
   return {
-    ...original,
-    pict: jest.fn().mockResolvedValue([
-      { param1: 'value1', param2: 'value1' },
-      { param1: 'value1', param2: 'value2' },
-      { param1: 'value2', param2: 'value1' },
-      { param1: 'value2', param2: 'value2' }
-    ]),
-    strings: jest.fn().mockResolvedValue([
-      { param1: 'value1', param2: 'value1' },
-      { param1: 'value1', param2: 'value2' },
-      { param1: 'value2', param2: 'value1' },
-      { param1: 'value2', param2: 'value2' }
-    ]),
-    pict: {
-      stats: jest.fn().mockResolvedValue({
-        combinations: 4,
-        generatedTests: 4,
-        generationTime: 0.01,
-        generationTimeNodeJs: 5
-      })
-    },
-    strings: {
-      stats: jest.fn().mockResolvedValue({
-        combinations: 4,
-        generatedTests: 4,
-        generationTime: 0.01,
-        generationTimeNodeJs: 5
-      })
-    }
+    pict: mockPict,
+    strings: mockStringsFunction
   };
 });
 
@@ -91,7 +92,7 @@ describe('Statistics API Integration Tests', () => {
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('success', true);
       expect(response.body).toHaveProperty('cases');
-      expect(response.body).toHaveProperty('count');
+      expect(response.body.cases).toHaveProperty('count');
       expect(response.body).toHaveProperty('statistics');
       
       // Check enhanced statistics properties
