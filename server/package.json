@@ -1,0 +1,23 @@
+{
+  "name": "pict-node-server",
+  "version": "1.0.0",
+  "description": "Server for PICT Node with enhanced statistics API",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest --config jest.config.js",
+    "test:unit": "jest --config jest.config.js --testMatch '**/tests/utils/**/*.test.js'",
+    "test:integration": "jest --config jest.config.js --testMatch '**/tests/api/**/*.test.js'",
+    "test:e2e": "jest --config jest.config.js --testMatch '**/tests/e2e/**/*.test.js'",
+    "test:watch": "jest --config jest.config.js --watch",
+    "test:coverage": "jest --config jest.config.js --coverage"
+  },
+  "dependencies": {
+    "express": "^4.18.3",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "jest": "^30.0.2",
+    "supertest": "^6.3.3"
+  }
+}
