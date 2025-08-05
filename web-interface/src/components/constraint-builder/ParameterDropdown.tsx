@@ -1,5 +1,5 @@
-import React from 'react';
-import { Form } from 'react-bootstrap';
+import React from "react";
+import { Form } from "react-bootstrap";
 
 interface Parameter {
   key: string;
@@ -22,15 +22,15 @@ const ParameterDropdown = ({
   parameters,
   selectedParameter,
   onChange,
-  placeholder = 'Select parameter',
+  placeholder = "Select parameter",
   label,
-  disabled = false
+  disabled = false,
 }) => {
   return (
     <div className="parameter-dropdown">
       {label && <Form.Label>{label}</Form.Label>}
       <Form.Select
-        value={selectedParameter || ''}
+        value={selectedParameter || ""}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
         aria-label="Parameter selection"

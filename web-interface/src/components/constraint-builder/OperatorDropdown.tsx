@@ -1,8 +1,8 @@
-import React from 'react';
-import { Form } from 'react-bootstrap';
+import React from "react";
+import { Form } from "react-bootstrap";
 
 // Define the available operators for different parameter types
-export type OperatorType = '=' | '<>' | '<' | '>' | '<=' | '>=' | 'IN';
+export type OperatorType = "=" | "<>" | "<" | ">" | "<=" | ">=" | "IN";
 
 interface OperatorDropdownProps {
   selectedOperator: OperatorType | null;
@@ -20,24 +20,24 @@ const OperatorDropdown = ({
   selectedOperator,
   onChange,
   isNumeric,
-  placeholder = 'Select operator',
+  placeholder = "Select operator",
   label,
-  disabled = false
+  disabled = false,
 }) => {
   // Define operators based on parameter type
   const operators: { value: OperatorType; label: string }[] = [
-    { value: '=', label: 'equals (=)' },
-    { value: '<>', label: 'not equals (<>)' },
-    { value: 'IN', label: 'in list (IN)' }
+    { value: "=", label: "equals (=)" },
+    { value: "<>", label: "not equals (<>)" },
+    { value: "IN", label: "in list (IN)" },
   ];
 
   // Add numeric operators if the parameter has numeric values
   if (isNumeric) {
     operators.push(
-      { value: '<', label: 'less than (<)' },
-      { value: '>', label: 'greater than (>)' },
-      { value: '<=', label: 'less than or equal (<=)' },
-      { value: '>=', label: 'greater than or equal (>=)' }
+      { value: "<", label: "less than (<)" },
+      { value: ">", label: "greater than (>)" },
+      { value: "<=", label: "less than or equal (<=)" },
+      { value: ">=", label: "greater than or equal (>=)" },
     );
   }
 
@@ -45,7 +45,7 @@ const OperatorDropdown = ({
     <div className="operator-dropdown">
       {label && <Form.Label>{label}</Form.Label>}
       <Form.Select
-        value={selectedOperator || ''}
+        value={selectedOperator || ""}
         onChange={(e) => onChange(e.target.value as OperatorType)}
         disabled={disabled}
         aria-label="Operator selection"

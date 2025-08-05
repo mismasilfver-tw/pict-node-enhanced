@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Row, Col } from 'react-bootstrap';
-import ParameterDropdown from './ParameterDropdown';
-import OperatorDropdown, { OperatorType } from './OperatorDropdown';
-import ValueDropdown from './ValueDropdown';
+import React, { useState, useEffect } from "react";
+import { Row, Col } from "react-bootstrap";
+import ParameterDropdown from "./ParameterDropdown";
+import OperatorDropdown, { OperatorType } from "./OperatorDropdown";
+import ValueDropdown from "./ValueDropdown";
 
 interface Parameter {
   key: string;
@@ -26,18 +26,15 @@ interface ConditionBuilderProps {
  * A component that combines parameter, operator, and value selection
  * for building a single condition in a constraint
  */
-const ConditionBuilder = ({
-  parameters,
-  condition,
-  onChange,
-  label
-}) => {
-  const [selectedParameter, setSelectedParameter] = useState(null as Parameter | null);
+const ConditionBuilder = ({ parameters, condition, onChange, label }) => {
+  const [selectedParameter, setSelectedParameter] = useState(
+    null as Parameter | null,
+  );
 
   // Update selected parameter when condition changes
   useEffect(() => {
     if (condition.parameterKey) {
-      const param = parameters.find(p => p.key === condition.parameterKey);
+      const param = parameters.find((p) => p.key === condition.parameterKey);
       setSelectedParameter(param || null);
     } else {
       setSelectedParameter(null);
@@ -45,17 +42,18 @@ const ConditionBuilder = ({
   }, [condition.parameterKey, parameters]);
 
   // Check if parameter values are numeric
-  const isNumeric = selectedParameter?.values.length ? 
-    selectedParameter.values.every(val => typeof val === 'number') : false;
+  const isNumeric = selectedParameter?.values.length
+    ? selectedParameter.values.every((val) => typeof val === "number")
+    : false;
 
   // Handle parameter selection
   const handleParameterChange = (paramKey: string) => {
-    const param = parameters.find(p => p.key === paramKey);
+    const param = parameters.find((p) => p.key === paramKey);
     const updatedCondition = {
       ...condition,
       parameterKey: paramKey,
       // Reset values when parameter changes
-      values: []
+      values: [],
     };
     onChange(updatedCondition);
   };
@@ -66,7 +64,7 @@ const ConditionBuilder = ({
       ...condition,
       operator,
       // Reset values when operator changes (especially for IN operator)
-      values: operator === 'IN' ? [] : condition.values
+      values: operator === "IN" ? [] : condition.values,
     };
     onChange(updatedCondition);
   };
@@ -75,7 +73,7 @@ const ConditionBuilder = ({
   const handleValueChange = (values: any[]) => {
     const updatedCondition = {
       ...condition,
-      values
+      values,
     };
     onChange(updatedCondition);
   };

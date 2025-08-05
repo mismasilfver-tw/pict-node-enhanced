@@ -1,7 +1,7 @@
-import React from 'react';
-import { Form, ButtonGroup, ToggleButton } from 'react-bootstrap';
+import React from "react";
+import { Form, ButtonGroup, ToggleButton } from "react-bootstrap";
 
-export type LogicalOperator = 'AND' | 'OR';
+export type LogicalOperator = "AND" | "OR";
 
 interface LogicalOperatorSelectorProps {
   selectedOperator: LogicalOperator;
@@ -17,11 +17,11 @@ const LogicalOperatorSelector = ({
   selectedOperator,
   onChange,
   disabled = false,
-  label
+  label,
 }) => {
   const operators: { value: LogicalOperator; label: string }[] = [
-    { value: 'AND', label: 'AND' },
-    { value: 'OR', label: 'OR' }
+    { value: "AND", label: "AND" },
+    { value: "OR", label: "OR" },
   ];
 
   return (
@@ -33,7 +33,7 @@ const LogicalOperatorSelector = ({
             key={op.value}
             id={`operator-${op.value}`}
             type="radio"
-            variant={op.value === 'AND' ? 'primary' : 'warning'}
+            variant={op.value === "AND" ? "primary" : "warning"}
             name="logical-operator"
             value={op.value}
             checked={selectedOperator === op.value}

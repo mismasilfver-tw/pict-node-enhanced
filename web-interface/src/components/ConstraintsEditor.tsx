@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Form, Button, Card, Alert, ButtonGroup, ToggleButton } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Card,
+  Alert,
+  ButtonGroup,
+  ToggleButton,
+} from "react-bootstrap";
 import ConstraintBuilder from "./constraint-builder/ConstraintBuilder";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/material.css";
@@ -199,11 +206,15 @@ const ConstraintsEditor = ({
               [parameter2] &lt;&gt; "value2";
             </p>
             <Alert variant="info">
-              <strong>Important:</strong> When comparing numeric values, do NOT use
-              quotes. Example: <br />
-              <code>IF [fileSystem] = "FAT" THEN [size] &lt;&gt; 10000</code>{" "}
+              <strong>Important:</strong> When comparing numeric values, do NOT
+              use quotes. Example: <br />
+              <code>
+                IF [fileSystem] = "FAT" THEN [size] &lt;&gt; 10000
+              </code>{" "}
               (correct) <br />
-              <code>IF [fileSystem] = "FAT" THEN [size] &lt;&gt; "10000"</code>{" "}
+              <code>
+                IF [fileSystem] = "FAT" THEN [size] &lt;&gt; "10000"
+              </code>{" "}
               (incorrect)
             </Alert>
 
@@ -220,8 +231,8 @@ const ConstraintsEditor = ({
                 placeholder={generateHint()}
               />
               <Form.Text className="text-muted">
-                Press Enter to add or use the Add button. Use [parameter_name] to
-                reference parameters.
+                Press Enter to add or use the Add button. Use [parameter_name]
+                to reference parameters.
               </Form.Text>
             </Form.Group>
 
@@ -347,8 +358,8 @@ const ConstraintsEditor = ({
                 Logical AND
               </li>
               <li>
-                <code>[param1] = "value1" OR [param2] = "value2";</code> - Logical
-                OR
+                <code>[param1] = "value1" OR [param2] = "value2";</code> -
+                Logical OR
               </li>
               <li>
                 <code>IF [param] &gt; 5 THEN [param2] &lt; 10;</code> - Numeric
