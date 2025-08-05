@@ -143,3 +143,38 @@ export interface PictNodeStatistics {
   generationTime: number;
   generationTimeNodeJs: number;
 }
+
+/**
+ * Enhanced PICT statistics interface with additional metrics
+ * Extends the base PictNodeStatistics with calculated metrics for coverage analysis
+ */
+export interface EnhancedPictNodeStatistics extends PictNodeStatistics {
+  /**
+   * The order of combinations used for test generation (e.g., 2 for pairwise)
+   */
+  order: number;
+  
+  /**
+   * The theoretical maximum number of combinations possible for the model
+   * This represents the total combination space without constraints
+   */
+  theoreticalMax: number;
+  
+  /**
+   * The percentage of combinations covered by the generated tests (0-100)
+   * PICT guarantees 100% coverage of the specified order combinations
+   */
+  coveragePercentage: number;
+  
+  /**
+   * Efficiency ratio of the test generation (0-1)
+   * Higher values indicate more efficient test coverage with fewer test cases
+   */
+  efficiency: number;
+  
+  /**
+   * Percentage reduction in combinations due to constraints (0-100)
+   * Higher values indicate constraints significantly reduced the test space
+   */
+  constraintReduction: number;
+}
