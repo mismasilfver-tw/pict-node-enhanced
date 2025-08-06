@@ -118,8 +118,9 @@ const ModelEditor = ({
             <Row className="mb-3">
               <Col>
                 <Form.Group>
-                  <Form.Label>Parameter Name</Form.Label>
+                  <Form.Label htmlFor={`parameter-name-${paramIndex}`}>Parameter Name</Form.Label>
                   <Form.Control
+                    id={`parameter-name-${paramIndex}`}
                     type="text"
                     value={param.key}
                     onChange={(e) =>

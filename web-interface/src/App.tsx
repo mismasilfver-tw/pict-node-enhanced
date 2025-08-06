@@ -17,9 +17,11 @@ import ModelEditor from "./components/ModelEditor";
 import TestCasesViewer from "./components/TestCasesViewer";
 import ExamplesDropdown from "./components/ExamplesDropdown";
 import ConstraintsEditor from "./components/ConstraintsEditor";
+import StatisticsPanel from "./components/StatisticsPanel";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ConstraintBuilderDemo from "./components/constraint-builder/ConstraintBuilderDemo";
+import { EnhancedStatistics } from "./types/statistics";
 
 // Define TypeScript interfaces
 interface Parameter {
@@ -60,6 +62,8 @@ const App = () => {
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [scenarioName, setScenarioName] = useState("");
   const [savedScenarios, setSavedScenarios] = useState([] as SavedScenario[]);
+  // Enhanced statistics state
+  const [statistics, setStatistics] = useState(null as EnhancedStatistics | null);
   // Toggle for showing constraint builder test component
   const [showConstraintBuilderDemo, setShowConstraintBuilderDemo] =
     useState(false);
@@ -118,6 +122,8 @@ const App = () => {
     setConstraints([]);
     // Clear test cases
     setTestCases([]);
+    // Clear statistics
+    setStatistics(null);
     // Hide the modal
     setShowClearModal(false);
     // Show success message
@@ -175,6 +181,8 @@ const App = () => {
   const generateTestCases = async () => {
     setLoading(true);
     setError(null);
+    // Reset statistics when generating new test cases
+    setStatistics(null);
 
     try {
       const response = await axios.post("/api/generate", {
@@ -186,6 +194,12 @@ const App = () => {
       const data = response.data as any;
       if (data && data.cases) {
         setTestCases(data.cases);
+        
+        // Handle enhanced statistics if available
+        if (data.statistics) {
+          setStatistics(data.statistics);
+        }
+        
         toast.success(
           `Generated ${data.count || data.cases.length} test cases`,
         );
@@ -387,6 +401,9 @@ const App = () => {
                 </Card.Header>
                 <Card.Body>
                   {error && <Alert variant="danger">{error}</Alert>}
+                  
+                  {/* Enhanced Statistics Panel */}
+                  {statistics && <StatisticsPanel statistics={statistics} />}
 
                   <TestCasesViewer testCases={testCases} />
 

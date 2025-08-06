@@ -8,6 +8,7 @@
     "codemirror": "^5.65.19",
     "react": "^17.0.2",
     "react-bootstrap": "^2.8.0",
+    "react-bootstrap-icons": "^1.11.6",
     "react-codemirror2": "^8.0.1",
     "react-dom": "^17.0.2",
     "react-json-view": "^1.21.3",
@@ -42,13 +43,20 @@
   },
   "proxy": "http://localhost:3001",
   "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^13.5.0",
     "@types/axios": "^0.9.36",
+    "@types/axios-mock-adapter": "^1.9.0",
     "@types/codemirror": "^5.60.16",
     "@types/react": "^17.0.87",
     "@types/react-bootstrap": "^1.0.1",
-    "@types/react-dom": "^17.0.26"
+    "@types/react-dom": "^17.0.26",
+    "axios-mock-adapter": "^2.1.0",
+    "babel-jest": "^30.0.5"
   }
 }
