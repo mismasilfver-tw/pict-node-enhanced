@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import {
   Container,
   Row,
@@ -17,9 +18,12 @@ import ModelEditor from "./components/ModelEditor";
 import TestCasesViewer from "./components/TestCasesViewer";
 import ExamplesDropdown from "./components/ExamplesDropdown";
 import ConstraintsEditor from "./components/ConstraintsEditor";
+import StatisticsPanel from "./components/StatisticsPanel";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ConstraintBuilderDemo from "./components/constraint-builder/ConstraintBuilderDemo";
+import TheoreticalMaximumExplained from "./pages/TheoreticalMaximumExplained";
+import { EnhancedStatistics } from "./types/statistics";
 
 // Define TypeScript interfaces
 interface Parameter {
@@ -46,7 +50,31 @@ interface SavedScenario {
   constraints: string[];
 }
 
+// Main application component with routing
 const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/theoretical-maximum" element={<TheoreticalMaximumPage />} />
+        <Route path="/" element={<PictTool />} />
+      </Routes>
+    </Router>
+  );
+};
+
+// Component for the theoretical maximum explanation page
+const TheoreticalMaximumPage = () => {
+  return (
+    <div className="App d-flex flex-column min-vh-100">
+      <Header />
+      <TheoreticalMaximumExplained />
+      <Footer />
+    </div>
+  );
+};
+
+// Main PICT Tool component
+const PictTool = () => {
   const [model, setModel] = useState([
     { key: "parameter1", values: ["value1", "value2"] },
   ]);
@@ -60,6 +88,8 @@ const App = () => {
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [scenarioName, setScenarioName] = useState("");
   const [savedScenarios, setSavedScenarios] = useState([] as SavedScenario[]);
+  // Enhanced statistics state
+  const [statistics, setStatistics] = useState(null as EnhancedStatistics | null);
   // Toggle for showing constraint builder test component
   const [showConstraintBuilderDemo, setShowConstraintBuilderDemo] =
     useState(false);
@@ -118,6 +148,8 @@ const App = () => {
     setConstraints([]);
     // Clear test cases
     setTestCases([]);
+    // Clear statistics
+    setStatistics(null);
     // Hide the modal
     setShowClearModal(false);
     // Show success message
@@ -175,6 +207,8 @@ const App = () => {
   const generateTestCases = async () => {
     setLoading(true);
     setError(null);
+    // Reset statistics when generating new test cases
+    setStatistics(null);
 
     try {
       const response = await axios.post("/api/generate", {
@@ -186,6 +220,12 @@ const App = () => {
       const data = response.data as any;
       if (data && data.cases) {
         setTestCases(data.cases);
+        
+        // Handle enhanced statistics if available
+        if (data.statistics) {
+          setStatistics(data.statistics);
+        }
+        
         toast.success(
           `Generated ${data.count || data.cases.length} test cases`,
         );
@@ -259,211 +299,220 @@ const App = () => {
   };
 
   return (
-    <Container className="app-container">
+    <div className="App d-flex flex-column min-vh-100">
       <Header />
-
-      <div className="mb-3">
-        <Button
-          variant={showConstraintBuilderDemo ? "outline-primary" : "primary"}
-          onClick={() => setShowConstraintBuilderDemo(false)}
-          className="me-2"
-        >
-          Main Interface
-        </Button>
-        <Button
-          variant={showConstraintBuilderDemo ? "primary" : "outline-primary"}
-          onClick={() => setShowConstraintBuilderDemo(true)}
-        >
-          Constraint Builder Demo
-        </Button>
-      </div>
-
-      {showConstraintBuilderDemo ? (
-        <ConstraintBuilderDemo />
-      ) : (
-        <div>
-          <Row className="mb-3">
-            <Col md={6}>
-              <ExamplesDropdown
-                examples={examples}
-                onSelect={handleExampleSelect}
-              />
-            </Col>
-            <Col md={6}>
-              {savedScenarios.length > 0 && (
-                <div className="d-flex align-items-center">
-                  <span className="me-2">Load saved scenario:</span>
-                  <select
-                    className="form-select"
-                    onChange={(e) => {
-                      const selected = savedScenarios.find(
-                        (s) => s.name === e.target.value,
-                      );
-                      if (selected) handleLoadSavedScenario(selected);
-                      // Reset select after loading
-                      e.target.value = "";
-                    }}
-                    defaultValue=""
-                  >
-                    <option value="" disabled>
-                      Select a saved scenario
-                    </option>
-                    {savedScenarios.map((scenario, index) => (
-                      <option key={index} value={scenario.name}>
-                        {scenario.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+      <main className="flex-grow-1 py-4">
+        <Container>
+          <Row>
+            <Col md={12}>
+              <Button
+                variant={showConstraintBuilderDemo ? "outline-primary" : "primary"}
+                onClick={() => setShowConstraintBuilderDemo(false)}
+                className="me-2"
+              >
+                Main Interface
+              </Button>
+              <Button
+                variant={showConstraintBuilderDemo ? "primary" : "outline-primary"}
+                onClick={() => setShowConstraintBuilderDemo(true)}
+              >
+                Constraint Builder Demo
+              </Button>
             </Col>
           </Row>
 
-          <Row>
-            <Col md={6}>
-              <Card className="mb-4">
-                <Card.Header>Test Model</Card.Header>
-                <Card.Body>
-                  <ModelEditor
-                    model={model}
-                    onChange={handleModelChange}
-                    options={options}
-                    onOptionsChange={handleOptionsChange}
+          {showConstraintBuilderDemo ? (
+            <ConstraintBuilderDemo />
+          ) : (
+            <div>
+              <Row className="mb-3">
+                <Col md={6}>
+                  <ExamplesDropdown
+                    examples={examples}
+                    onSelect={handleExampleSelect}
                   />
-
-                  <ConstraintsEditor
-                    model={model}
-                    constraints={constraints}
-                    onChange={setConstraints}
-                  />
-                  <div className="d-flex mt-3">
-                    <Button
-                      variant="primary"
-                      onClick={generateTestCases}
-                      disabled={loading}
-                      className="me-2"
-                    >
-                      {loading ? (
-                        <>
-                          <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                            className="me-2"
-                          />
-                          Generating...
-                        </>
-                      ) : (
-                        "Generate Test Cases"
-                      )}
-                    </Button>
-                    <Button
-                      variant="outline-success"
-                      onClick={() => setShowSaveModal(true)}
-                      className="me-2"
-                    >
-                      Save Values
-                    </Button>
-                    <Button
-                      variant="outline-danger"
-                      onClick={() => setShowClearModal(true)}
-                    >
-                      Clear All Values
-                    </Button>
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-
-            <Col md={6}>
-              <Card>
-                <Card.Header>
-                  Test Cases
-                  <span className="float-end">
-                    {testCases.length > 0 && `${testCases.length} cases`}
-                  </span>
-                </Card.Header>
-                <Card.Body>
-                  {error && <Alert variant="danger">{error}</Alert>}
-
-                  <TestCasesViewer testCases={testCases} />
-
-                  {testCases.length > 0 && (
-                    <div className="export-buttons">
-                      <Button variant="outline-secondary" onClick={exportToCsv}>
-                        Export to CSV
-                      </Button>{" "}
-                      <Button
-                        variant="outline-secondary"
-                        onClick={exportToJson}
+                </Col>
+                <Col md={6}>
+                  {savedScenarios.length > 0 && (
+                    <div className="d-flex align-items-center">
+                      <span className="me-2">Load saved scenario:</span>
+                      <select
+                        className="form-select"
+                        onChange={(e) => {
+                          const selected = savedScenarios.find(
+                            (s) => s.name === e.target.value,
+                          );
+                          if (selected) handleLoadSavedScenario(selected);
+                          // Reset select after loading
+                          e.target.value = "";
+                        }}
+                        defaultValue=""
                       >
-                        Export to JSON
-                      </Button>
+                        <option value="" disabled>
+                          Select a saved scenario
+                        </option>
+                        {savedScenarios.map((scenario, index) => (
+                          <option key={index} value={scenario.name}>
+                            {scenario.name}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   )}
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
+                </Col>
+              </Row>
 
-          <Footer />
-        </div>
-      )}
+              <Row>
+                <Col md={6}>
+                  <Card className="mb-4">
+                    <Card.Header>Test Model</Card.Header>
+                    <Card.Body>
+                      <ModelEditor
+                        model={model}
+                        onChange={handleModelChange}
+                        options={options}
+                        onOptionsChange={handleOptionsChange}
+                      />
 
-      {/* Confirmation Modal for Clear All Values */}
-      <Modal show={showClearModal} onHide={() => setShowClearModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Clear All Values</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to clear all parameters and constraints? This
-          action cannot be undone.
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowClearModal(false)}>
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={clearAllValues}>
-            Clear All Values
-          </Button>
-        </Modal.Footer>
-      </Modal>
+                      <ConstraintsEditor
+                        model={model}
+                        constraints={constraints}
+                        onChange={setConstraints}
+                      />
+                      <div className="d-flex mt-3">
+                        <Button
+                          variant="primary"
+                          onClick={generateTestCases}
+                          disabled={loading}
+                          className="me-2"
+                        >
+                          {loading ? (
+                            <>
+                              <Spinner
+                                as="span"
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                                className="me-2"
+                              />
+                              Generating...
+                            </>
+                          ) : (
+                            "Generate Test Cases"
+                          )}
+                        </Button>
+                        <Button
+                          variant="outline-success"
+                          onClick={() => setShowSaveModal(true)}
+                          className="me-2"
+                        >
+                          Save Values
+                        </Button>
+                        <Button
+                          variant="outline-danger"
+                          onClick={() => setShowClearModal(true)}
+                        >
+                          Clear All Values
+                        </Button>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
 
-      {/* Save Scenario Modal */}
-      <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Save Scenario</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="mb-3">
-            <label className="form-label">Scenario Name</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Enter a name for this scenario"
-              value={scenarioName}
-              onChange={(e) => setScenarioName(e.target.value)}
-              pattern="[A-Za-z0-9 ]+"
-              title="Name can contain letters, numbers, and spaces"
-            />
-            <div className="form-text text-muted">
-              Name can contain letters, numbers, and spaces.
+                <Col md={6}>
+                  <Card>
+                    <Card.Header>
+                      Test Cases
+                      <span className="float-end">
+                        {testCases.length > 0 && `${testCases.length} cases`}
+                      </span>
+                    </Card.Header>
+                    <Card.Body>
+                      {error && <Alert variant="danger">{error}</Alert>}
+                      
+                      {/* Enhanced Statistics Panel */}
+                      {statistics && <StatisticsPanel statistics={statistics} />}
+
+                      <TestCasesViewer testCases={testCases} />
+
+                      {testCases.length > 0 && (
+                        <div className="export-buttons">
+                          <Button variant="outline-secondary" onClick={exportToCsv}>
+                            Export to CSV
+                          </Button>{" "}
+                          <Button
+                            variant="outline-secondary"
+                            onClick={exportToJson}
+                          >
+                            Export to JSON
+                          </Button>
+                        </div>
+                      )}
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+
+              <Footer />
             </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
-            Cancel
-          </Button>
-          <Button variant="success" onClick={handleSaveScenario}>
-            Save Scenario
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </Container>
+          )}
+
+          {/* Confirmation Modal for Clear All Values */}
+          <Modal show={showClearModal} onHide={() => setShowClearModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Confirm Clear All Values</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              Are you sure you want to clear all parameters and constraints? This
+              action cannot be undone.
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowClearModal(false)}>
+                Cancel
+              </Button>
+              <Button variant="danger" onClick={clearAllValues}>
+                Clear All Values
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          {/* Save Scenario Modal */}
+          <Modal show={showSaveModal} onHide={() => setShowSaveModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Save Scenario</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="mb-3">
+                <label className="form-label">Scenario Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Enter a name for this scenario"
+                  value={scenarioName}
+                  onChange={(e) => setScenarioName(e.target.value)}
+                  pattern="[A-Za-z0-9 ]+"
+                  title="Name can contain letters, numbers, and spaces"
+                />
+                <div className="form-text text-muted">
+                  Name can contain letters, numbers, and spaces.
+                </div>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
+                Cancel
+              </Button>
+              <Button variant="success" onClick={handleSaveScenario}>
+                Save Scenario
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </Container>
+      </main>
+    </div>
   );
 };
 
+// Export the main App component
 export default App;
