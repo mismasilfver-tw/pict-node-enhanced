@@ -154,9 +154,14 @@ function StatisticsPanel({
             </p>
 
             <h6>📊 <strong>Theoretical Maximum</strong></h6>
-            <p className="text-muted mb-3">
+            <p className="text-muted mb-1">
               The total number of possible n-way combinations for your parameters. 
               This represents the exhaustive testing approach.
+            </p>
+            <p className="mb-3">
+              <a href="/theoretical-maximum" target="_blank" rel="noopener noreferrer" className="text-decoration-none">
+                Read more about how this is calculated
+              </a>
             </p>
 
             <h6>✅ <strong>Coverage Percentage</strong></h6>
