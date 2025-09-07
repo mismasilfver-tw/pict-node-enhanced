@@ -24,45 +24,45 @@ global.performance = {
 };
 
 // Mock pict and strings modules for integration tests
-jest.mock('../../lib/index', () => {
+jest.mock("../../lib/index", () => {
   // Create mock implementations with stats methods
   const mockPict = jest.fn().mockImplementation(() => {
     return {
-      testCases: ['test1', 'test2'],
-      count: 2
+      testCases: ["test1", "test2"],
+      count: 2,
     };
   });
-  
+
   mockPict.stats = jest.fn().mockImplementation(() => {
     return {
       combinations: 100,
       generatedTests: 10,
       generationTime: 0.5,
-      generationTimeNodeJs: 0.1
+      generationTimeNodeJs: 0.1,
     };
   });
-  
+
   // For strings, we need to create a function that can be called directly
   // and also has a stats method
   const mockStringsFunction = jest.fn().mockImplementation(() => {
     return {
-      testCases: ['test1', 'test2'],
-      count: 2
+      testCases: ["test1", "test2"],
+      count: 2,
     };
   });
-  
+
   mockStringsFunction.stats = jest.fn().mockImplementation(() => {
     return {
       combinations: 100,
       generatedTests: 10,
       generationTime: 0.5,
-      generationTimeNodeJs: 0.1
+      generationTimeNodeJs: 0.1,
     };
   });
-  
+
   return {
     pict: mockPict,
-    strings: mockStringsFunction
+    strings: mockStringsFunction,
   };
 });
 

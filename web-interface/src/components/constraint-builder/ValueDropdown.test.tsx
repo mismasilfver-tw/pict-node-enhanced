@@ -1,7 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import ValueDropdown from "./ValueDropdown";
-import { OperatorType } from "./OperatorDropdown";
 
 describe("ValueDropdown", () => {
   const mockStringParameter = {

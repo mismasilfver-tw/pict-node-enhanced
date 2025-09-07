@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import {
   Container,
   Row,
@@ -55,7 +60,10 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/theoretical-maximum" element={<TheoreticalMaximumPage />} />
+        <Route
+          path="/theoretical-maximum"
+          element={<TheoreticalMaximumPage />}
+        />
         <Route path="/" element={<PictTool />} />
       </Routes>
     </Router>
@@ -89,7 +97,9 @@ const PictTool = () => {
   const [scenarioName, setScenarioName] = useState("");
   const [savedScenarios, setSavedScenarios] = useState([] as SavedScenario[]);
   // Enhanced statistics state
-  const [statistics, setStatistics] = useState(null as EnhancedStatistics | null);
+  const [statistics, setStatistics] = useState(
+    null as EnhancedStatistics | null,
+  );
   // Toggle for showing constraint builder test component
   const [showConstraintBuilderDemo, setShowConstraintBuilderDemo] =
     useState(false);
@@ -220,12 +230,12 @@ const PictTool = () => {
       const data = response.data as any;
       if (data && data.cases) {
         setTestCases(data.cases);
-        
+
         // Handle enhanced statistics if available
         if (data.statistics) {
           setStatistics(data.statistics);
         }
-        
+
         toast.success(
           `Generated ${data.count || data.cases.length} test cases`,
         );
@@ -306,14 +316,18 @@ const PictTool = () => {
           <Row>
             <Col md={12}>
               <Button
-                variant={showConstraintBuilderDemo ? "outline-primary" : "primary"}
+                variant={
+                  showConstraintBuilderDemo ? "outline-primary" : "primary"
+                }
                 onClick={() => setShowConstraintBuilderDemo(false)}
                 className="me-2"
               >
                 Main Interface
               </Button>
               <Button
-                variant={showConstraintBuilderDemo ? "primary" : "outline-primary"}
+                variant={
+                  showConstraintBuilderDemo ? "primary" : "outline-primary"
+                }
                 onClick={() => setShowConstraintBuilderDemo(true)}
               >
                 Constraint Builder Demo
@@ -430,15 +444,20 @@ const PictTool = () => {
                     </Card.Header>
                     <Card.Body>
                       {error && <Alert variant="danger">{error}</Alert>}
-                      
+
                       {/* Enhanced Statistics Panel */}
-                      {statistics && <StatisticsPanel statistics={statistics} />}
+                      {statistics && (
+                        <StatisticsPanel statistics={statistics} />
+                      )}
 
                       <TestCasesViewer testCases={testCases} />
 
                       {testCases.length > 0 && (
                         <div className="export-buttons">
-                          <Button variant="outline-secondary" onClick={exportToCsv}>
+                          <Button
+                            variant="outline-secondary"
+                            onClick={exportToCsv}
+                          >
                             Export to CSV
                           </Button>{" "}
                           <Button
@@ -464,11 +483,14 @@ const PictTool = () => {
               <Modal.Title>Confirm Clear All Values</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              Are you sure you want to clear all parameters and constraints? This
-              action cannot be undone.
+              Are you sure you want to clear all parameters and constraints?
+              This action cannot be undone.
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={() => setShowClearModal(false)}>
+              <Button
+                variant="secondary"
+                onClick={() => setShowClearModal(false)}
+              >
                 Cancel
               </Button>
               <Button variant="danger" onClick={clearAllValues}>
@@ -500,7 +522,10 @@ const PictTool = () => {
               </div>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={() => setShowSaveModal(false)}>
+              <Button
+                variant="secondary"
+                onClick={() => setShowSaveModal(false)}
+              >
                 Cancel
               </Button>
               <Button variant="success" onClick={handleSaveScenario}>

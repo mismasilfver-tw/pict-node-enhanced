@@ -50,7 +50,10 @@ function parseParameter(raw: string) {
 /**
  * Receives raw PICT's statistics output and return normalized statistics
  */
-export function parseStatistics(raw: string, generationTimeNodeJs: number): PictNodeStatistics {
+export function parseStatistics(
+  raw: string,
+  generationTimeNodeJs: number,
+): PictNodeStatistics {
   return raw
     .split(EOL)
     .filter(Boolean)
@@ -71,14 +74,14 @@ export function parseStatistics(raw: string, generationTimeNodeJs: number): Pict
  * @returns Enhanced statistics with additional metrics
  */
 export function parseEnhancedStatistics(
-  raw: string, 
-  generationTimeNodeJs: number, 
+  raw: string,
+  generationTimeNodeJs: number,
   order: number,
-  parameterCount: number
+  parameterCount: number,
 ): EnhancedPictNodeStatistics {
   // First parse the base statistics
   const baseStats = parseStatistics(raw, generationTimeNodeJs);
-  
+
   // Then enhance them with additional metrics
   return enhanceStatistics(baseStats, order, parameterCount);
 }

@@ -85,14 +85,8 @@ describe("ValidationDemo", () => {
   test.skip("shows validation message for type mismatch", async () => {
     render(<ValidationDemo />);
 
-    // Find the condition builder in the second section
-    const dropdowns = screen.getAllByRole("combobox");
-
-    // Find the parameter dropdown in the type mismatch section
-    // This is a bit tricky since there are multiple dropdowns, so we'll need to find it by proximity
-    const typeMismatchSection = screen
-      .getByText("Type Mismatch Tests")
-      .closest(".card") as HTMLElement;
+    // Target the type mismatch card by test id
+    const typeMismatchSection = screen.getByTestId("type-mismatch-card");
     const typeMismatchDropdowns =
       within(typeMismatchSection).getAllByRole("combobox");
 
@@ -126,22 +120,8 @@ describe("ValidationDemo", () => {
   test.skip("shows validation message for syntax validation", async () => {
     render(<ValidationDemo />);
 
-    // Find the condition builder in the second section
-    const sections = screen.getAllByRole("heading", { level: 6 });
-    // Using getByText instead of direct DOM access
-    const typeValidationSection = screen
-      .getByText("Type Validation Tests")
-      .closest(".card");
-    const dropdowns = within(typeValidationSection as HTMLElement).getAllByRole(
-      "combobox",
-    );
-    // Unused variable warning
-    expect(sections.length).toBeGreaterThan(0);
-
     // Find the syntax validation section
-    const syntaxSection = screen
-      .getByText("Syntax Validation Demo")
-      .closest(".card") as HTMLElement;
+    const syntaxSection = screen.getByTestId("syntax-demo-card");
     const syntaxDropdowns = within(syntaxSection).getAllByRole("combobox");
 
     // Select a parameter

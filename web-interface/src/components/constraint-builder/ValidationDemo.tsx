@@ -242,7 +242,7 @@ const ValidationDemo = () => {
     <Container>
       <h2 className="mt-4 mb-4">Validation Tests</h2>
 
-      <Card className="mb-4">
+      <Card className="mb-4" data-testid="invalid-combo-card">
         <Card.Header>Invalid Parameter-Operator Combinations</Card.Header>
         <Card.Body>
           <Row>
@@ -291,7 +291,7 @@ const ValidationDemo = () => {
         </Card.Body>
       </Card>
 
-      <Card className="mb-4">
+      <Card className="mb-4" data-testid="type-mismatch-card">
         <Card.Header>Type Mismatch Tests</Card.Header>
         <Card.Body>
           <ConditionBuilder
@@ -327,7 +327,7 @@ const ValidationDemo = () => {
         </Card.Body>
       </Card>
 
-      <Card className="mb-4">
+      <Card className="mb-4" data-testid="syntax-demo-card">
         <Card.Header>Syntax Validation Demo</Card.Header>
         <Card.Body>
           <ConditionBuilder

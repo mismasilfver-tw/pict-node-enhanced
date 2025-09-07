@@ -6,19 +6,22 @@ import { PictNodeStatistics, EnhancedPictNodeStatistics } from "./types";
  * @param order The order value used (n-way combinations)
  * @returns The theoretical maximum number of combinations
  */
-export function calculateTheoreticalMax(parameterCount: number, order: number): number {
+export function calculateTheoreticalMax(
+  parameterCount: number,
+  order: number,
+): number {
   // For a model with n parameters and order k, the theoretical maximum
   // is the binomial coefficient C(n,k) = n! / (k! * (n-k)!)
   if (parameterCount < order) {
     return 0;
   }
-  
+
   // Calculate binomial coefficient
   let result = 1;
   for (let i = 1; i <= order; i++) {
-    result = result * (parameterCount - (i - 1)) / i;
+    result = (result * (parameterCount - (i - 1))) / i;
   }
-  
+
   return Math.round(result);
 }
 
@@ -29,14 +32,15 @@ export function calculateTheoreticalMax(parameterCount: number, order: number): 
  * @returns The percentage of combinations reduced by constraints (0-100)
  */
 export function calculateConstraintReduction(
-  theoreticalMax: number, 
-  actualCombinations: number
+  theoreticalMax: number,
+  actualCombinations: number,
 ): number {
   if (theoreticalMax <= 0) {
     return 0;
   }
-  
-  const reduction = ((theoreticalMax - actualCombinations) / theoreticalMax) * 100;
+
+  const reduction =
+    ((theoreticalMax - actualCombinations) / theoreticalMax) * 100;
   return Math.max(0, Math.min(100, Math.round(reduction)));
 }
 
@@ -50,24 +54,32 @@ export function calculateConstraintReduction(
 export function enhanceStatistics(
   baseStats: PictNodeStatistics,
   order: number,
-  parameterCount: number
+  parameterCount: number,
 ): EnhancedPictNodeStatistics {
   // Calculate theoretical maximum combinations
   const theoreticalMax = calculateTheoreticalMax(parameterCount, order);
-  
+
   // Calculate coverage percentage
-  const coveragePercentage = baseStats.combinations > 0 
-    ? Math.min(100, Math.round((baseStats.generatedTests / baseStats.combinations) * 100))
-    : 0;
-  
+  const coveragePercentage =
+    baseStats.combinations > 0
+      ? Math.min(
+          100,
+          Math.round((baseStats.generatedTests / baseStats.combinations) * 100),
+        )
+      : 0;
+
   // Calculate efficiency (tests per combination)
-  const efficiency = baseStats.combinations > 0 
-    ? parseFloat((baseStats.generatedTests / theoreticalMax).toFixed(2))
-    : 0;
-  
+  const efficiency =
+    baseStats.combinations > 0
+      ? parseFloat((baseStats.generatedTests / theoreticalMax).toFixed(2))
+      : 0;
+
   // Calculate constraint reduction
-  const constraintReduction = calculateConstraintReduction(theoreticalMax, baseStats.combinations);
-  
+  const constraintReduction = calculateConstraintReduction(
+    theoreticalMax,
+    baseStats.combinations,
+  );
+
   // Return enhanced statistics
   return {
     ...baseStats,
@@ -75,6 +87,6 @@ export function enhanceStatistics(
     theoreticalMax,
     coveragePercentage,
     efficiency,
-    constraintReduction
+    constraintReduction,
   };
 }

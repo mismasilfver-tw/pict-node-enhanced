@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-  within,
-} from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import ConstraintBuilderDemo from "./ConstraintBuilderDemo";
 
 describe("ConstraintBuilderDemo", () => {
@@ -17,12 +11,9 @@ describe("ConstraintBuilderDemo", () => {
     expect(screen.getByText("Validation Demo")).toBeInTheDocument();
 
     // Check that Component Tests tab is active
-    const navLinks = screen.getAllByText(/Component Tests|Validation Demo/);
-    const componentsTab = navLinks.find(
-      (link) => link.textContent === "Component Tests",
-    );
+    const componentsTab = screen.getByText("Component Tests");
     expect(componentsTab).toBeInTheDocument();
-    expect(componentsTab?.closest(".nav-link")).toHaveClass("active");
+    expect(componentsTab).toHaveClass("active");
 
     // Check that component test content is visible
     expect(screen.getByText("Parameter Dropdown")).toBeInTheDocument();
@@ -34,15 +25,12 @@ describe("ConstraintBuilderDemo", () => {
     render(<ConstraintBuilderDemo />);
 
     // Find all tab elements and click the one containing 'Validation Demo'
-    const navLinks = screen.getAllByText(/Component Tests|Validation Demo/);
-    const validationTabLink = navLinks.find(
-      (link) => link.textContent === "Validation Demo",
-    );
+    const validationTabLink = screen.getByText("Validation Demo");
     expect(validationTabLink).toBeInTheDocument();
-    fireEvent.click(validationTabLink!);
+    fireEvent.click(validationTabLink);
 
     // Check that Validation Demo tab is now active
-    expect(validationTabLink?.closest(".nav-link")).toHaveClass("active");
+    expect(validationTabLink).toHaveClass("active");
 
     // Check that validation test content is visible
     expect(
@@ -73,27 +61,15 @@ describe("ConstraintBuilderDemo", () => {
     render(<ConstraintBuilderDemo />);
 
     // Find the logical operator section
-    const logicalOperatorSection = screen.getByText(
-      "Logical Operator Selector",
-    ).parentElement;
-
-    // Find the OR button using within and getByRole
-    const { getByText } = within(logicalOperatorSection as HTMLElement);
-    const orButton = getByText("OR");
-
-    // Click the OR button
-    fireEvent.click(orButton);
-
-    // Find the section that shows the selected operator
-    const sections = screen.getAllByText("Selected Operator:");
-    // Get the parent of the last one which should be in the logical operator section
-    const selectedOperatorSection = sections[sections.length - 1].parentElement;
-
-    // Check that the code element inside this section contains 'OR'
-    const codeElement = within(
-      selectedOperatorSection as HTMLElement,
-    ).getByText("OR");
-    expect(codeElement).toBeInTheDocument();
+    // Find the logical operator control by its accessible group name
+    const operatorGroup = screen.getByRole("group", {
+      name: /select logical operator/i,
+    });
+    // Choose OR
+    const orRadio = within(operatorGroup).getByRole("radio", { name: "OR" });
+    fireEvent.click(orRadio);
+    // Assert OR is selected
+    expect(orRadio).toBeChecked();
   });
 
   // Skip this test for now as the component behavior has changed

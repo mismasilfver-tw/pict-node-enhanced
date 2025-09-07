@@ -24,7 +24,7 @@ router.post("/stats", async (req, res) => {
     }
 
     let statistics = null;
-    
+
     // If constraints are provided, use the strings API
     if (constraints && constraints.length > 0) {
       try {
@@ -59,7 +59,7 @@ router.post("/stats", async (req, res) => {
 
           if (!isValid) {
             throw new Error(
-              `Constraint references unknown parameter: ${processedConstraint}`
+              `Constraint references unknown parameter: ${processedConstraint}`,
             );
           }
 
@@ -79,7 +79,7 @@ router.post("/stats", async (req, res) => {
             model: stringModel,
             constraints: formattedConstraints,
           },
-          options || {}
+          options || {},
         );
       } catch (error) {
         console.error("Error processing constraints for statistics:", error);
@@ -92,8 +92,11 @@ router.post("/stats", async (req, res) => {
     }
 
     // Create enhanced statistics with additional metrics
-    const orderValue = options && typeof options.order === 'number' ? options.order : 2;
-    statistics = createEnhancedStatistics(statistics, model, { order: orderValue });
+    const orderValue =
+      options && typeof options.order === "number" ? options.order : 2;
+    statistics = createEnhancedStatistics(statistics, model, {
+      order: orderValue,
+    });
 
     return res.json({
       success: true,
