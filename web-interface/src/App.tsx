@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import {
   Container,
   Row,
@@ -15,10 +10,8 @@ import {
   Spinner,
   Alert,
   Modal,
-  Form,
 } from "react-bootstrap";
 import { toast } from "react-toastify";
-import ReactJson from "react-json-view";
 import ModelEditor from "./components/ModelEditor";
 import TestCasesViewer from "./components/TestCasesViewer";
 import ExamplesDropdown from "./components/ExamplesDropdown";
@@ -41,9 +34,7 @@ interface Example {
   model: Parameter[];
 }
 
-interface TestCase {
-  [key: string]: any;
-}
+// Removed unused TestCase interface
 
 interface Options {
   order?: number;
