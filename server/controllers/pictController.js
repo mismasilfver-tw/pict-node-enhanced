@@ -86,7 +86,7 @@ const generateTestCases = async (req, res) => {
           },
           options || {},
         );
-        
+
         // Try to get statistics
         try {
           statistics = await strings.stats(
@@ -107,7 +107,7 @@ const generateTestCases = async (req, res) => {
     } else {
       // Use the standard pict API if no constraints
       cases = await pict({ model }, options || {});
-      
+
       // Try to get statistics
       try {
         statistics = await pict.stats({ model }, options || {});
@@ -119,8 +119,11 @@ const generateTestCases = async (req, res) => {
 
     // Create enhanced statistics with additional metrics if statistics were generated
     if (statistics) {
-      const orderValue = options && typeof options.order === 'number' ? options.order : 2;
-      statistics = createEnhancedStatistics(statistics, model, { order: orderValue });
+      const orderValue =
+        options && typeof options.order === "number" ? options.order : 2;
+      statistics = createEnhancedStatistics(statistics, model, {
+        order: orderValue,
+      });
     }
 
     return res.json({

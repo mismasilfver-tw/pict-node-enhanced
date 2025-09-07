@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Card, Button, Form, Row, Col, Alert } from "react-bootstrap";
 import ConditionBuilder, { Condition } from "./ConditionBuilder";
 import LogicalOperatorSelector, {
@@ -59,35 +59,8 @@ const ConstraintBuilder = ({ parameters, onAddConstraint, onCancel }) => {
   const [validationMessage, setValidationMessage] = useState("");
 
   // Generate constraint preview whenever conditions change
-  useEffect(() => {
-    generatePreview();
-  }, [simpleCondition, ifCondition, thenCondition, constraintType]);
-
-  // Format a condition for display
-  const formatCondition = (condition: Condition): string => {
-    if (
-      !condition.parameterKey ||
-      !condition.operator ||
-      condition.values.length === 0
-    ) {
-      return "";
-    }
-
-    const param = parameters.find((p) => p.key === condition.parameterKey);
-    const isNumeric = param?.values.every((v) => typeof v === "number");
-
-    const valueStr =
-      condition.operator === "IN"
-        ? `{${condition.values.map((v) => (isNumeric ? v : `"${v}"`)).join(", ")}}`
-        : isNumeric
-          ? condition.values[0]
-          : `"${condition.values[0]}"`;
-
-    return `[${condition.parameterKey}] ${condition.operator} ${valueStr}`;
-  };
-
-  // Generate constraint preview
-  const generatePreview = () => {
+  // Memoize the preview generator to satisfy exhaustive-deps
+  const generatePreview = useCallback(() => {
     let preview = "";
     let valid = false;
 
@@ -113,7 +86,36 @@ const ConstraintBuilder = ({ parameters, onAddConstraint, onCancel }) => {
     setValidationMessage(
       valid ? "Constraint is valid" : "Please complete all fields",
     );
+  }, [constraintType, simpleCondition, ifCondition, thenCondition, parameters]);
+
+  useEffect(() => {
+    generatePreview();
+  }, [generatePreview]);
+
+  // Format a condition for display
+  const formatCondition = (condition: Condition): string => {
+    if (
+      !condition.parameterKey ||
+      !condition.operator ||
+      condition.values.length === 0
+    ) {
+      return "";
+    }
+
+    const param = parameters.find((p) => p.key === condition.parameterKey);
+    const isNumeric = param?.values.every((v) => typeof v === "number");
+
+    const valueStr =
+      condition.operator === "IN"
+        ? `{${condition.values.map((v) => (isNumeric ? v : `"${v}"`)).join(", ")}}`
+        : isNumeric
+          ? condition.values[0]
+          : `"${condition.values[0]}"`;
+
+    return `[${condition.parameterKey}] ${condition.operator} ${valueStr}`;
   };
+
+  // generatePreview is memoized above
 
   // Handle constraint submission
   const handleAddConstraint = () => {

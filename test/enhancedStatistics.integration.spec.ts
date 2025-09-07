@@ -34,21 +34,21 @@ describe("Enhanced Statistics Integration Tests", () => {
       expect(result).toHaveProperty("generatedTests");
       expect(result).toHaveProperty("generationTime");
       expect(result).toHaveProperty("generationTimeNodeJs");
-      
+
       // Verify enhanced fields
       expect(result).toHaveProperty("order", 2);
       expect(result).toHaveProperty("theoreticalMax");
       expect(result).toHaveProperty("coveragePercentage");
       expect(result).toHaveProperty("efficiency");
       expect(result).toHaveProperty("constraintReduction");
-      
+
       // Verify data types
       expect(typeof result.order).toBe("number");
       expect(typeof result.theoreticalMax).toBe("number");
       expect(typeof result.coveragePercentage).toBe("number");
       expect(typeof result.efficiency).toBe("number");
       expect(typeof result.constraintReduction).toBe("number");
-      
+
       // For a 3-parameter model with order 2, theoretical max should be C(3,2) = 3
       expect(result.theoreticalMax).toBe(3);
     });
@@ -79,10 +79,10 @@ describe("Enhanced Statistics Integration Tests", () => {
 
       // Verify enhanced fields
       expect(result).toHaveProperty("order", 3);
-      
+
       // For a 4-parameter model with order 3, theoretical max should be C(4,3) = 4
       expect(result.theoreticalMax).toBe(4);
-      
+
       // PICT doesn't guarantee 100% coverage, it provides best approximation
       // with minimum number of tests
       expect(result.coveragePercentage).toBeGreaterThan(0);
@@ -92,19 +92,21 @@ describe("Enhanced Statistics Integration Tests", () => {
     test("should handle constraint reduction calculation correctly", async () => {
       // Instead of testing with real constraints, which are difficult to predict,
       // we'll test the constraint reduction calculation function directly
-      
+
       // Import the calculation functions
-      const { calculateConstraintReduction } = require('../src/common/enhancedStatistics');
-      
+      const {
+        calculateConstraintReduction,
+      } = require("../src/common/enhancedStatistics");
+
       // Test with known values
       expect(calculateConstraintReduction(100, 80)).toBe(20); // 20% reduction
       expect(calculateConstraintReduction(100, 50)).toBe(50); // 50% reduction
       expect(calculateConstraintReduction(100, 0)).toBe(100); // 100% reduction
       expect(calculateConstraintReduction(0, 0)).toBe(0); // Edge case
-      
+
       // Now verify that the stats API correctly uses this function
       // by comparing results with and without constraints
-      
+
       // Create a model with 3 parameters
       const model = [
         {
@@ -123,20 +125,22 @@ describe("Enhanced Statistics Integration Tests", () => {
 
       // First get statistics without constraints
       const baseResult = await strings.stats({ model });
-      
+
       // Then get statistics with constraints that we know will reduce combinations
       const constraints = [
-        "IF [OS] = \"Windows\" THEN [Browser] = \"Chrome\"; IF [OS] = \"Linux\" THEN [Browser] = \"Firefox\";"
+        'IF [OS] = "Windows" THEN [Browser] = "Chrome"; IF [OS] = "Linux" THEN [Browser] = "Firefox";',
       ];
-      
-      const constrainedResult = await strings.stats({ 
+
+      const constrainedResult = await strings.stats({
         model,
-        constraints
+        constraints,
       });
-      
+
       // The constrained result should have fewer combinations
-      expect(constrainedResult.combinations).toBeLessThanOrEqual(baseResult.combinations);
-      
+      expect(constrainedResult.combinations).toBeLessThanOrEqual(
+        baseResult.combinations,
+      );
+
       // If combinations were reduced, constraint reduction should be calculated
       // However, the implementation might use a different formula or rounding method
       // than our manual calculation, so we'll just verify it's in a reasonable range
@@ -165,14 +169,14 @@ describe("Enhanced Statistics Integration Tests", () => {
       expect(result).toHaveProperty("generatedTests");
       expect(result).toHaveProperty("generationTime");
       expect(result).toHaveProperty("generationTimeNodeJs");
-      
+
       // Verify enhanced fields
       expect(result).toHaveProperty("order");
       expect(result).toHaveProperty("theoreticalMax");
       expect(result).toHaveProperty("coveragePercentage");
       expect(result).toHaveProperty("efficiency");
       expect(result).toHaveProperty("constraintReduction");
-      
+
       // For a 3-parameter model with default order 2, theoretical max should be C(3,2) = 3
       expect(result.theoreticalMax).toBe(3);
     });
@@ -189,21 +193,21 @@ describe("Enhanced Statistics Integration Tests", () => {
 
       // Get statistics with order 2
       const result2Way = await strings.stats({ model }, { order: 2 });
-      
+
       // For a 5-parameter model with order 2, theoretical max should be C(5,2) = 10
       expect(result2Way.order).toBe(2);
       expect(result2Way.theoreticalMax).toBe(10);
 
       // Get statistics with order 3
       const result3Way = await strings.stats({ model }, { order: 3 });
-      
+
       // For a 5-parameter model with order 3, theoretical max should be C(5,3) = 10
       expect(result3Way.order).toBe(3);
       expect(result3Way.theoreticalMax).toBe(10);
 
       // Get statistics with order 4
       const result4Way = await strings.stats({ model }, { order: 4 });
-      
+
       // For a 5-parameter model with order 4, theoretical max should be C(5,4) = 5
       expect(result4Way.order).toBe(4);
       expect(result4Way.theoreticalMax).toBe(5);
@@ -236,21 +240,26 @@ describe("Enhanced Statistics Integration Tests", () => {
 
       // Get statistics from both APIs
       const pictResult = await pict.stats({ model: pictModel }, { order: 2 });
-      const stringsResult = await strings.stats({ model: stringsModel }, { order: 2 });
+      const stringsResult = await strings.stats(
+        { model: stringsModel },
+        { order: 2 },
+      );
 
       // Verify core statistics fields match
       expect(pictResult.order).toBe(stringsResult.order);
       expect(pictResult.theoreticalMax).toBe(stringsResult.theoreticalMax);
-      
+
       // PICT doesn't guarantee 100% coverage, it provides best approximation
       // with minimum number of tests
       expect(pictResult.coveragePercentage).toBeGreaterThan(0);
       expect(pictResult.coveragePercentage).toBeLessThanOrEqual(100);
       expect(stringsResult.coveragePercentage).toBeGreaterThan(0);
       expect(stringsResult.coveragePercentage).toBeLessThanOrEqual(100);
-      
+
       // The coverage percentages should be close to each other
-      const coverageDifference = Math.abs(pictResult.coveragePercentage - stringsResult.coveragePercentage);
+      const coverageDifference = Math.abs(
+        pictResult.coveragePercentage - stringsResult.coveragePercentage,
+      );
       expect(coverageDifference).toBeLessThan(5); // Allow small differences due to implementation
     });
   });

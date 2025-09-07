@@ -18,7 +18,10 @@ import { createSeed } from "./seed";
 import { parseResult } from "./parse";
 import { PictStringModel, InputConstraints, isInputConstraints } from "./types";
 import { performance } from "perf_hooks";
-import { parseStatistics, parseEnhancedStatistics } from "../../common/statistics";
+import {
+  parseStatistics,
+  parseEnhancedStatistics,
+} from "../../common/statistics";
 
 export interface StringsOptions {
   order?: number;
@@ -179,13 +182,13 @@ strings.stats = async function strings<
   const start = performance.now();
 
   const callPictOptions = prepare(model, options);
-  
+
   // Set statistics option to true to get statistics from PICT
   callPictOptions.options.statistics = true;
-  
+
   // Get the order from options or use default
   const order = options?.order || Math.min(2, model.model.length);
-  
+
   // Get the parameter count from the model
   const parameterCount = model.model.length;
 

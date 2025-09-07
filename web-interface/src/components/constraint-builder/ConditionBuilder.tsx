@@ -26,7 +26,12 @@ interface ConditionBuilderProps {
  * A component that combines parameter, operator, and value selection
  * for building a single condition in a constraint
  */
-const ConditionBuilder = ({ parameters, condition, onChange, label }) => {
+const ConditionBuilder = ({
+  parameters,
+  condition,
+  onChange,
+  label,
+}: ConditionBuilderProps) => {
   const [selectedParameter, setSelectedParameter] = useState(
     null as Parameter | null,
   );
@@ -48,7 +53,6 @@ const ConditionBuilder = ({ parameters, condition, onChange, label }) => {
 
   // Handle parameter selection
   const handleParameterChange = (paramKey: string) => {
-    const param = parameters.find((p) => p.key === paramKey);
     const updatedCondition = {
       ...condition,
       parameterKey: paramKey,

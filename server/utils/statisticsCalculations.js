@@ -16,17 +16,17 @@ const calculateTheoreticalMax = (model, order = 2) => {
   // For n-way combinations, we need to calculate C(n,k) * product of values
   // where C(n,k) is the binomial coefficient (n choose k)
   // and product of values is the product of the number of values for each parameter
-  
+
   // Calculate the number of parameter combinations (n choose k)
   const n = model.length;
   const k = order;
-  
+
   // Calculate binomial coefficient (n choose k)
   const combinations = binomialCoefficient(n, k);
-  
+
   // Calculate average number of values per parameter combination
   let totalCombinations = 0;
-  
+
   // For each possible combination of k parameters
   // We need to use a more efficient approach than generating all combinations
   if (order === 2) {
@@ -44,11 +44,11 @@ const calculateTheoreticalMax = (model, order = 2) => {
       avgValuesPerParam += param.values.length;
     }
     avgValuesPerParam /= model.length;
-    
+
     // Theoretical maximum is approximately C(n,k) * avgValuesPerParam^k
     totalCombinations = combinations * Math.pow(avgValuesPerParam, order);
   }
-  
+
   return Math.round(totalCombinations);
 };
 
@@ -61,16 +61,16 @@ const calculateTheoreticalMax = (model, order = 2) => {
 const binomialCoefficient = (n, k) => {
   if (k < 0 || k > n) return 0;
   if (k === 0 || k === n) return 1;
-  
+
   // Use the symmetry of binomial coefficients
   if (k > n - k) k = n - k;
-  
+
   let result = 1;
   for (let i = 1; i <= k; i++) {
-    result *= (n - (k - i));
+    result *= n - (k - i);
     result /= i;
   }
-  
+
   return Math.round(result);
 };
 
@@ -82,7 +82,7 @@ const binomialCoefficient = (n, k) => {
  */
 const calculateCoveragePercentage = (generatedTests, totalCombinations) => {
   if (!totalCombinations || totalCombinations <= 0) return 0;
-  
+
   // PICT guarantees 100% coverage of the specified order combinations
   // This is a fundamental property of the PICT algorithm
   return 100;
@@ -95,16 +95,21 @@ const calculateCoveragePercentage = (generatedTests, totalCombinations) => {
  * @returns {Number} - Efficiency ratio (0-1)
  */
 const calculateEfficiency = (generatedTests, theoreticalMax) => {
-  if (!theoreticalMax || theoreticalMax <= 0 || !generatedTests || generatedTests <= 0) {
+  if (
+    !theoreticalMax ||
+    theoreticalMax <= 0 ||
+    !generatedTests ||
+    generatedTests <= 0
+  ) {
     return 0;
   }
-  
+
   // Efficiency is the ratio of theoretical minimum tests needed to actual tests generated
   // Lower is better (closer to optimal solution)
   // We invert it so higher is better (0-1 scale)
   const minPossibleTests = Math.ceil(Math.log(theoreticalMax) / Math.log(2));
   const efficiency = minPossibleTests / generatedTests;
-  
+
   // Cap at 1 and ensure it's not negative
   return Math.min(1, Math.max(0, efficiency));
 };
@@ -118,9 +123,10 @@ const calculateEfficiency = (generatedTests, theoreticalMax) => {
 const calculateConstraintReduction = (theoreticalMax, actualCombinations) => {
   if (!theoreticalMax || theoreticalMax <= 0) return 0;
   if (!actualCombinations || actualCombinations <= 0) return 100;
-  
-  const reduction = ((theoreticalMax - actualCombinations) / theoreticalMax) * 100;
-  
+
+  const reduction =
+    ((theoreticalMax - actualCombinations) / theoreticalMax) * 100;
+
   // Ensure it's between 0-100
   return Math.min(100, Math.max(0, reduction));
 };
@@ -136,29 +142,29 @@ const createEnhancedStatistics = (baseStats, model, options = {}) => {
   if (!baseStats || !model) {
     return baseStats;
   }
-  
+
   const order = options.order || 2;
   const theoreticalMax = calculateTheoreticalMax(model, order);
   const coveragePercentage = calculateCoveragePercentage(
-    baseStats.generatedTests, 
-    baseStats.combinations
+    baseStats.generatedTests,
+    baseStats.combinations,
   );
   const efficiency = calculateEfficiency(
-    baseStats.generatedTests, 
-    theoreticalMax
+    baseStats.generatedTests,
+    theoreticalMax,
   );
   const constraintReduction = calculateConstraintReduction(
     theoreticalMax,
-    baseStats.combinations
+    baseStats.combinations,
   );
-  
+
   return {
     ...baseStats,
     order,
     theoreticalMax,
     coveragePercentage,
     efficiency,
-    constraintReduction
+    constraintReduction,
   };
 };
 
@@ -167,5 +173,5 @@ module.exports = {
   calculateCoveragePercentage,
   calculateEfficiency,
   calculateConstraintReduction,
-  createEnhancedStatistics
+  createEnhancedStatistics,
 };

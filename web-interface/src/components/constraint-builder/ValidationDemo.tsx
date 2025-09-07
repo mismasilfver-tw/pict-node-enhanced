@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Card, Container, Row, Col, Form, Alert } from "react-bootstrap";
 import ParameterDropdown from "./ParameterDropdown";
 import OperatorDropdown, { OperatorType } from "./OperatorDropdown";
-import ValueDropdown from "./ValueDropdown";
 import ConditionBuilder, { Condition } from "./ConditionBuilder";
 
 interface Parameter {
@@ -21,13 +20,16 @@ interface ValidationResult {
  */
 const ValidationDemo = () => {
   // Sample model data for testing with more diverse types
-  const sampleParameters: Parameter[] = [
-    { key: "fileSystem", values: ["FAT", "NTFS", "exFAT"] },
-    { key: "size", values: [100, 1000, 10000] },
-    { key: "compression", values: ["enabled", "disabled"] },
-    { key: "emptyParam", values: [] }, // Parameter with no values for testing
-    { key: "mixedTypes", values: ["string", 42, true] }, // Parameter with mixed types for testing
-  ];
+  const sampleParameters: Parameter[] = useMemo(
+    () => [
+      { key: "fileSystem", values: ["FAT", "NTFS", "exFAT"] },
+      { key: "size", values: [100, 1000, 10000] },
+      { key: "compression", values: ["enabled", "disabled"] },
+      { key: "emptyParam", values: [] }, // Parameter with no values for testing
+      { key: "mixedTypes", values: ["string", 42, true] }, // Parameter with mixed types for testing
+    ],
+    [],
+  );
 
   // State for invalid combination test
   const [invalidComboParam, setInvalidComboParam] = useState(
@@ -102,7 +104,7 @@ const ValidationDemo = () => {
         type: "success",
       });
     }
-  }, [invalidComboParam, invalidComboOperator]);
+  }, [invalidComboParam, invalidComboOperator, sampleParameters]);
 
   // Validate type mismatches between parameters and values
   useEffect(() => {
@@ -155,7 +157,7 @@ const ValidationDemo = () => {
         type: "success",
       });
     }
-  }, [typeMismatchCondition]);
+  }, [typeMismatchCondition, sampleParameters]);
 
   // Validate syntax for generated constraints
   useEffect(() => {
@@ -236,13 +238,13 @@ const ValidationDemo = () => {
         });
       }
     }
-  }, [syntaxCondition]);
+  }, [syntaxCondition, sampleParameters]);
 
   return (
     <Container>
       <h2 className="mt-4 mb-4">Validation Tests</h2>
 
-      <Card className="mb-4">
+      <Card className="mb-4" data-testid="invalid-combo-card">
         <Card.Header>Invalid Parameter-Operator Combinations</Card.Header>
         <Card.Body>
           <Row>
@@ -291,7 +293,7 @@ const ValidationDemo = () => {
         </Card.Body>
       </Card>
 
-      <Card className="mb-4">
+      <Card className="mb-4" data-testid="type-mismatch-card">
         <Card.Header>Type Mismatch Tests</Card.Header>
         <Card.Body>
           <ConditionBuilder
@@ -327,7 +329,7 @@ const ValidationDemo = () => {
         </Card.Body>
       </Card>
 
-      <Card className="mb-4">
+      <Card className="mb-4" data-testid="syntax-demo-card">
         <Card.Header>Syntax Validation Demo</Card.Header>
         <Card.Body>
           <ConditionBuilder

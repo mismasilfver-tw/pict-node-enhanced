@@ -791,7 +791,7 @@ describe("pict()", () => {
         theoreticalMax: 1,
         coveragePercentage: 100,
         efficiency: 9,
-        constraintReduction: 0
+        constraintReduction: 0,
       });
     });
   });

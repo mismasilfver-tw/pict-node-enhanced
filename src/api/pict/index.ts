@@ -15,7 +15,10 @@ import { isPositiveNumber } from "../../common/utils";
 import { createModel } from "./model";
 import { createSeed } from "./seed";
 import { parseResult } from "./parse";
-import { parseStatistics, parseEnhancedStatistics } from "../../common/statistics";
+import {
+  parseStatistics,
+  parseEnhancedStatistics,
+} from "../../common/statistics";
 import { performance } from "perf_hooks";
 
 interface PictOptions {
@@ -129,10 +132,10 @@ pict.stats = async function stats<M extends ReadonlyArray<PictTypedModel>>(
 
     // Set statistics option to true to get statistics from PICT
     callPictOptions.options.statistics = true;
-    
+
     // Get the order from options or use default
     const order = options?.order || Math.min(2, model.model.length);
-    
+
     // Get the parameter count from the model
     const parameterCount = model.model.length;
 
