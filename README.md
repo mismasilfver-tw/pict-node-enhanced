@@ -431,6 +431,12 @@ npm start
 
 ## Future Development Roadmap
 
+### Near-Term Items
+
+- Unskip tests
+- Improve the user interface button layouts
+- Improve the user interface with some styling
+
 ### Constraints Editor Improvements
 
 The following are potential improvements to the constraints editor UI to make it more user-friendly:

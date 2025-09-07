@@ -103,9 +103,9 @@ describe("Statistics End-to-End Tests", () => {
     await screen.findByText("Generate Test Cases", {}, { timeout: 10000 });
 
     // Step 2: Set order to 2 (pairwise)
-    const orderSelect = screen.getByRole("combobox", {
-      name: /combination order/i,
-    });
+    // Use the label to locate the associated select (no aria-label on select)
+    const orderLabelEl = screen.getByText("Combination Order");
+    const orderSelect = orderLabelEl.nextElementSibling as HTMLSelectElement;
     fireEvent.change(orderSelect, { target: { value: "2" } });
 
     // Step 4: Generate test cases
@@ -284,10 +284,9 @@ describe("Statistics End-to-End Tests", () => {
     fireEvent.click(secondValueButton);
 
     // Generate with order 2
-    // Select order using accessible role and name
-    const orderInput = screen.getByRole("combobox", {
-      name: /combination order/i,
-    });
+    // Select order via label's sibling select (no aria-label on select)
+    const orderLabel2 = screen.getByText("Combination Order");
+    const orderInput = orderLabel2.nextElementSibling as HTMLSelectElement;
     fireEvent.change(orderInput, { target: { value: "2" } });
 
     const generateButton = screen.getByText("Generate Test Cases");
