@@ -7,7 +7,7 @@ interface EnhancedStatistics {
   generatedTests: number;
   theoreticalMax: number;
   coveragePercentage: number;
-  efficiency: string;
+  efficiency: string | number;
   constraintReduction: number;
 }
 
@@ -27,7 +27,15 @@ function StatisticsPanel({
     return null;
   }
 
-  const getEfficiencyVariant = (efficiency: string) => {
+  const getEfficiencyVariant = (efficiency: string | number) => {
+    // If number (0..1), map thresholds to labels
+    if (typeof efficiency === 'number') {
+      const val = Number.isFinite(efficiency) ? efficiency : 0;
+      if (val >= 0.75) return 'success';
+      if (val >= 0.5) return 'warning';
+      return 'danger';
+    }
+    // If string, normalize and map
     switch (efficiency.toLowerCase()) {
       case 'high': return 'success';
       case 'medium': return 'warning';
@@ -94,7 +102,9 @@ function StatisticsPanel({
               <Col sm={6}>
                 <strong>Efficiency:</strong>{' '}
                 <Badge bg={getEfficiencyVariant(statistics.efficiency)}>
-                  {statistics.efficiency}
+                  {typeof statistics.efficiency === 'number'
+                    ? `${Math.round(Math.min(1, Math.max(0, statistics.efficiency)) * 100)}%`
+                    : statistics.efficiency}
                 </Badge>
               </Col>
               <Col sm={6}>

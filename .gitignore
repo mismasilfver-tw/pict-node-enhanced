@@ -5,3 +5,5 @@ dts
 coverage
 bin
 .DS_Store
+package-lock.json
+**/package-lock.json
